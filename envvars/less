@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+# https://github.com/dandavison/delta/issues/58
+
+export LESS='FR'

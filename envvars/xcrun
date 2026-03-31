@@ -1,7 +1,0 @@
-#!/bin/env zsh
-
-# this is currently not an executable because flutter doesn't work when CPATH is set
-# useful for zlib, for building Pillow from source:
-export CPATH=`xcrun --show-sdk-path`/usr/include
-export LDFLAGS="-L/usr/local/opt/zlib/lib"
-export CPPFLAGS="-I/usr/local/opt/zlib/include"
