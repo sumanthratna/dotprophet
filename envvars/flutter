@@ -1,5 +1,0 @@
-#!/bin/env zsh
-
-export PATH="$PATH:$HOME/flutter/bin"
-export PATH="$PATH":"$HOME/flutter/.pub-cache/bin"
-compdef _gnu_generic flutter
