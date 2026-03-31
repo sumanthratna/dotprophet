@@ -21,12 +21,6 @@
 -   usage: `rmr .DS_Store`
 -   adapted from <https://stackoverflow.com/a/45647470/7127932>
 
-### [`git fork`](./aliases/git)
-
--   forks a GitHub repository, clones it, adds the origin and upstream remotes, and `cd`s into it
--   usage: `git fork nirum/tableprint`
--   I wrote this one myself
-
 ### [`email`](./aliases/email)
 
 -   returns a list of emails given a social media handle

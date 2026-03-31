@@ -1,9 +1,0 @@
-#!/bin/env zsh
-
-# derived from http://superuser.com/questions/105375/bash-spaces-in-alias-name and https://www.quora.com/How-can-I-make-a-git-alias-that-executes-a-cd/answer/Vaibhav-Mallya
-git () {
-    case $* in
-        fork*) cd $(gh repo fork $2 --clone true --remote true 2>&1 | ggrep -oP "Cloning into '\K\w+(?='...)") && : ;;
-        *) command git "$@" ;;
-    esac
-}
