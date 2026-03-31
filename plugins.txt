@@ -1,6 +1,0 @@
-Aloxaf/fzf-tab
-romkatv/zsh-defer
-romkatv/powerlevel10k
-zsh-users/zsh-syntax-highlighting
-zsh-users/zsh-autosuggestions
-larkery/zsh-histdb

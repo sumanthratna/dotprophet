@@ -1,4 +1,0 @@
-#!/bin/env zsh
-
-source $HOME/ondir.zsh
-trap 'ondir $PWD /' EXIT
