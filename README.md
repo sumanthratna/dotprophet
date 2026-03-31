@@ -33,11 +33,10 @@ cd ~
 git clone https://github.com/sumanthratna/dotprophet.git
 
 cd /tmp
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 cd ~/dotprophet
-ln -s ~/dotprophet/Brewfile ~/.Brewfile
 brew bundle
 
 cd ~
