@@ -1,5 +1,0 @@
-#!/bin/env zsh
-
-google () {
-    open "https://www.google.com/search?access=a&client=terminal&q=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$*")"
-}
