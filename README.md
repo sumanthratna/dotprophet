@@ -2,18 +2,10 @@
 
 ## Useful [Aliases](./aliases)
 
-### [`up`](./aliases/up)
-
--   jumps to the previous mark in Terminal.app (prompt lines are automatically marked)
--   useful for when you want to go to the beginning of a long block of output
--   usage: `up` (which is the same as `up 1`) or `up n`, where an `n` is a positive integer
--   I wrote this one myself
-
 ### [`quit`](./aliases/quit)
 
--   quits Terminal.app in macOS
+-   quits the current terminal app in macOS
 -   usage: `quit`
--   taken from <https://stackoverflow.com/a/22447960/7127932>
 
 ### [`rmr`](./aliases/rmr)
 
@@ -97,6 +89,9 @@ ln -s ~/dotprophet/rcfiles/muttrc ~/.muttrc
 ln -s ~/dotprophet/rcfiles/ondirrc ~/.ondirrc
 
 ln -s ~/dotprophet/ssh_config ~/.ssh/config
+
+mkdir -p ~/.config/ghostty
+ln -s ~/dotprophet/rcfiles/ghostty ~/.config/ghostty/config
 ```
 
 ## Terminal Workflow
