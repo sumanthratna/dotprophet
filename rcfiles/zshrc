@@ -7,20 +7,26 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-autoload -Uz compinit
-if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
-  compinit
-else
-  compinit -C
-fi
 setopt CORRECT
 setopt CORRECT_ALL
 setopt INTERACTIVE_COMMENTS
 
 export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-source $HOME/dotprophet/.plugins.sh
+source "${HOME}/.zgen/zgen.zsh"
+if ! zgen saved; then
+    zgen loadall <<EOPLUGINS
+        Aloxaf/fzf-tab
+        romkatv/zsh-defer
+        romkatv/powerlevel10k powerlevel10k
+        larkery/zsh-histdb
+        zsh-users/zsh-autosuggestions
+        zsh-users/zsh-syntax-highlighting
+EOPLUGINS
+    zgen save
+fi
 source $HOME/dotprophet/prompt.sh
 zsh-defer source $HOME/dotprophet/envvars.sh
 zsh-defer source $HOME/dotprophet/aliases.sh
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+fpath+=~/.zfunc
+zsh-defer autoload -Uz compinit && compinit
