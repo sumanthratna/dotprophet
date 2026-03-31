@@ -1,3 +1,0 @@
-#!/bin/env zsh
-
-alias scendblock='sudo /Library/PrivilegedHelperTools/org.eyebeam.SelfControl $(id -u $(whoami)) --checkup'

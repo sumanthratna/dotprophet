@@ -1,3 +1,0 @@
-#!/bin/env zsh
-
-alias rlint="Rscript -e 'lintr::lint(commandArgs(trailingOnly = TRUE))'"

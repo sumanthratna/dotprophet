@@ -1,3 +1,0 @@
-#!/bin/env zsh
-
-alias poetry="python3 $HOME/.poetry/bin/poetry"

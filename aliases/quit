@@ -1,3 +1,10 @@
-#!/bin/env zsh
+#!/usr/bin/env zsh
 
-alias quit='osascript -e "do shell script \"osascript -e \\\"tell application \\\\\\\"Terminal\\\\\\\" to quit\\\" &> /dev/null &\""; exit'
+quit() {
+  local bundle="${__CFBundleIdentifier:-}"
+  if [[ -z $bundle ]]; then
+    echo "Could not detect terminal app" >&2
+    return 1
+  fi
+  osascript -e "do shell script \"osascript -e 'tell app id \\\"$bundle\\\" to quit' &>/dev/null &\""
+}

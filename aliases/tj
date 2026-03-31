@@ -1,3 +1,0 @@
-#!/bin/env zsh
-
-alias tj='ssh tj'
