@@ -1,27 +1,48 @@
-#!/bin/env zsh
+#!/usr/bin/env zsh
 
 email () {
   # TODO: if no source is passed, search through all sources
-  # TODO: pagination
-  case $* in
-      github*)
-        curl -s "https://api.github.com/users/$2/events?per_page=100" | jq '[.[] | .payload.commits[]?.author.email] | unique'
-        ;;
-      gitlab*)
-        # TODO: this will output 1 array per project that the user has committed to recently
-        # it would be nice to merge these two arrays and apply the unique jq filter
-        for project in $(curl -s "https://gitlab.com/api/v4/users/$2/events?per_page=100" | jq 'group_by([.project_id]) | map({ project_id: .[0].project_id, commits: map(.push_data.commit_to) | unique })' | jq -r '.[] | @base64')
-        do
-          project_id=$(echo $project | base64 --decode | jq -r '.project_id')
-          read -rA commits <<< $(echo $project | base64 --decode | jq -r '.commits | @sh')
-          local select_re=".id == $(echo ${(j{ or .id == })commits})"
-          unset commits
-          # read -rA project_emails <<< $(curl -s "https://gitlab.com/api/v4/projects/${project_id}/repository/commits?per_page=100" | jq -r --arg re ${select_re} '[.[] | select($re) | .committer_email, .author_email] | unique | @sh')
-          # echo $project_emails
-          # unset project_emails
-          curl -s https://gitlab.com/api/v4/projects/${project_id}/repository/commits | jq -r --arg re ${select_re} '[.[] | select($re) | .committer_email, .author_email] | unique'
-        done
-        ;;
-      *) command echo $@ is not a valid source. ;;
+  case $1 in
+    github)
+      local emails=()
+      local repo_emails=""
+      printf "Fetching repos for %s..." "$2" >&2
+      local repos=$(gh api "users/$2/repos" --paginate --jq '.[].full_name')
+      if [[ -z "$repos" ]]; then
+        printf "\r\033[K" >&2
+        echo "[]"
+        return
+      fi
+      local total=$(echo "$repos" | wc -l | tr -d ' ')
+      local i=0
+      printf "\r\033[K" >&2
+      for repo in ${(f)repos}; do
+        (( i++ ))
+        printf "\rScanning repos: %s/%s" "$i" "$total" >&2
+        repo_emails=$(gh api "repos/${repo}/commits?author=$2&per_page=5" --jq '.[].commit.author.email' 2>/dev/null)
+        if [[ -n "$repo_emails" && "$repo_emails" != "{"* ]]; then
+          emails+=(${(f)repo_emails})
+        fi
+      done
+      printf "\r\033[K" >&2
+      if (( ${#emails} == 0 )); then
+        echo "[]"
+      else
+        printf '%s\n' "${emails[@]}" | grep -v 'noreply' | sort -u | jq -R . | jq -s .
+      fi
+      ;;
+    gitlab)
+      # TODO: this will output 1 array per project that the user has committed to recently
+      # it would be nice to merge these two arrays and apply the unique jq filter
+      for project in $(curl -s "https://gitlab.com/api/v4/users/$2/events?per_page=100" | jq 'group_by([.project_id]) | map({ project_id: .[0].project_id, commits: map(.push_data.commit_to) | unique })' | jq -r '.[] | @base64')
+      do
+        local project_id=$(echo $project | base64 --decode | jq -r '.project_id')
+        read -rA commits <<< $(echo $project | base64 --decode | jq -r '.commits | @sh')
+        local select_re=".id == $(echo ${(j{ or .id == })commits})"
+        unset commits
+        curl -s https://gitlab.com/api/v4/projects/${project_id}/repository/commits | jq -r --arg re ${select_re} '[.[] | select($re) | .committer_email, .author_email] | unique'
+      done
+      ;;
+    *) echo "unknown source: $1" >&2; return 1 ;;
   esac
 }
