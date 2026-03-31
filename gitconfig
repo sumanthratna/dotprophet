@@ -29,12 +29,6 @@
 [interactive]
   diffFilter = delta --color-only
 [url "git@github.com:"]
-	insteadOf = https://github.com/
-[man]
-	viewer = batman
-[man "batman"]
-	cmd = batman
-[pull]
-	rebase = false
+  insteadOf = https://github.com/
 [push]
-	followTags = true
+  followTags = true
