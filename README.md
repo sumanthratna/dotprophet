@@ -20,16 +20,9 @@
 -   usage: `email github AutinMitra`
 -   I wrote this one myself
 
-### [`postgres`](./aliases/postgres)
-
--   does everything that `pg_ctl` can do
--   useful for when you don't want to use a brew service for Postgres
--   usage: `postgres start`, `postgres stop`, etc. (see `pg_ctl --help`)
--   I wrote this one myself
-
 ### [`show`](./aliases/show)
 
--   lists all the files in a pretty way, using [`exa`](https://the.exa.website/)
+-   lists all the files in a pretty way, using [`eza`](https://github.com/eza-community/eza)
 -   usage: `show` or `show dir/` or `show file`
 -   I wrote this one myself (this wasn't hard to write)
 
@@ -41,57 +34,40 @@
 
 ## Setup
 
-Set up `neomutt` by following [this](https://unix.stackexchange.com/a/223088).
-
 ```zsh
 cd ~
-git clone git@github.com:sumanthratna/dotprophet.git
+git clone https://github.com/sumanthratna/dotprophet.git
 
 cd /tmp
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
 cd ~/dotprophet
 ln -s ~/dotprophet/Brewfile ~/.Brewfile
 brew bundle
 
 cd ~
 
-antibody bundle < ~/dotprophet/plugins.txt > ~/dotprophet/.plugins.sh
-chmod +x ~/dotprophet/.plugins.sh
+git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
 
 ln -s ~/dotprophet/rcfiles/zshrc ~/.zshrc
 ln -s ~/dotprophet/gitconfig ~/.gitconfig
-python3.8 -m venv ~/.config/nvim/env
+
+python3.11 -m venv ~/.config/nvim/env
 source ~/.config/nvim/env/bin/activate
-python3 -m pip install wheel
-python3 -m pip install pynvim jedi psutil setproctitle yapf doq
+python3 -m pip install --upgrade pip
+python3 -m pip install pynvim doq pyright
 deactivate
-curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 ln -s ~/dotprophet/init.vim ~/.config/nvim/init.vim
 nvim -es -u ~/.config/nvim/init.vim -i NONE -c "PlugInstall" -c "qa"
-ln -s ~/dotprophet/rcfiles/nanorc ~/.nanorc
-
-trash ~/.atom/config.cson
-trash ~/.atom/github.cson
-trash ~/.atom/styles.less
-python3.8 -m venv ~/dotprophet/atom/venv
-source ~/dotprophet/atom/venv/bin/activate
-python -m pip install 'python-language-server[all]'
-deactivate
-ln -s ~/dotprophet/atom/config.cson ~/.atom/config.cson
-ln -s ~/dotprophet/atom/github.cson ~/.atom/github.cson
-ln -s ~/dotprophet/atom/styles.less ~/.atom/styles.less
-apm install --packages-file ~/dotprophet/atom/package-list.txt
-
-ln -s ~/dotprophet/flutter_settings ~/.flutter_settings
-
-ln -s ~/dotprophet/rcfiles/muttrc ~/.muttrc
-
-ln -s ~/dotprophet/rcfiles/ondirrc ~/.ondirrc
 
 ln -s ~/dotprophet/ssh_config ~/.ssh/config
 
 mkdir -p ~/.config/ghostty
 ln -s ~/dotprophet/rcfiles/ghostty ~/.config/ghostty/config
+
+defaults write com.apple.finder AppleShowAllFiles YES
 ```
 
 ## Terminal Workflow
