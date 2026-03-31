@@ -1,13 +1,30 @@
 Host *
-		AddKeysToAgent yes
-		UseKeychain yes
-		IdentityFile ~/.ssh/id_rsa
-		ServerAliveInterval 120
+	AddKeysToAgent yes
+	UseKeychain yes
+	IdentityFile ~/.ssh/id_ed25519
+	ServerAliveInterval 120
+
+Host zoo
+	HostName node.zoo.cs.yale.edu
+	User sr2437
+
+Host *.zoo
+	HostName %h.cs.yale.edu
+	User sr2437
+
+Host consign mercury
+	HostName %h.pmacs.upenn.edu
+	User sratna04
+	IdentityFile ~/.ssh/id_rsa_pmacs
+	IdentitiesOnly yes
+
+Host juneau
+	HostName juneau.med.upenn.edu
+	User sratna04
+	IdentityFile ~/.ssh/id_rsa_pmacs
+	IdentitiesOnly yes
 
 Host eabsentee eAbsentee
-		HostName ssh.pythonanywhere.com
-		User eabsenteeproject
+	HostName ssh.pythonanywhere.com
+	User eabsenteeproject
 
-Host localhost
-		PubkeyAuthentication yes
-		IdentityFile ~/.ssh/id_rsa_localhost
