@@ -74,11 +74,8 @@ python3 -m pip install wheel
 python3 -m pip install pynvim jedi psutil setproctitle yapf doq
 deactivate
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-nvim -c ':PlugInstall' -c ':UpdateRemotePlugins' -c ':qall'
-mkdir -p ~/.config/nvim/pack/airblade/start
-git clone git@github.com:airblade/vim-gitgutter.git ~/.config/nvim/pack/airblade/start
-nvim -u NONE -c "helptags ~/.config/nvim/pack/airblade/start/vim-gitgutter/doc" -c q
 ln -s ~/dotprophet/init.vim ~/.config/nvim/init.vim
+nvim -es -u ~/.config/nvim/init.vim -i NONE -c "PlugInstall" -c "qa"
 ln -s ~/dotprophet/rcfiles/nanorc ~/.nanorc
 
 trash ~/.atom/config.cson

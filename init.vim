@@ -1,222 +1,75 @@
 """ @sumanthratna's neovim configuration
 """ Heavily inspired by Optixal's Neovim Init.vim
-""" https://github.com/Optixal/neovim-init.vim/blob/65801818644aab134d3e2261805219e9eed7d968/init.vim
+""" https://github.com/Optixal/neovim-init.vim/blob/09121154d7bd0355d68389b8eb22e6b2e59fb63a/init.vim
 
 """ Vim-Plug
-call plug#begin(stdpath('data') . '/plugged')
+call plug#begin()
 
-" Aesthetics - Main
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'ryanoasis/vim-devicons'
-Plug 'junegunn/goyo.vim'
-Plug 'yuttie/hydrangea-vim'
+" Core (treesitter, nvim-lspconfig, nvim-cmp, nvim-telescope, nvim-lualine)
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'nvim-tree/nvim-tree.lua'
 
 " Functionalities
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
-Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/nerdcommenter'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'deoplete-plugins/deoplete-jedi'
-Plug 'ervandew/supertab'
+Plug 'mhinz/vim-signify'
 Plug 'jiangmiao/auto-pairs'
-Plug 'junegunn/vim-easy-align'
 Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-abolish'
-Plug 'Yggdroot/indentLine'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'sheerun/vim-polyglot'
+Plug 'junegunn/vim-easy-align'
+Plug 'preservim/nerdcommenter'
+Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'chrisbra/Colorizer'
 Plug 'KabbAmine/vCoolor.vim'
-Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
-Plug 'vim-scripts/loremipsum'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'metakirby5/codi.vim'
 Plug 'dkarter/bullets.vim'
-Plug 'dense-analysis/ale'
+Plug 'wellle/context.vim'
+
+" Functionalities - Python
+Plug 'psf/black', { 'branch': 'stable' }
+Plug 'heavenshell/vim-pydocstring'
+
+" Aesthetics - Colorschemes
+Plug 'rebelot/kanagawa.nvim'
+
+" Aesthetics - Others
+Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'junegunn/vim-journal'
 
 call plug#end()
 
-""" Python3 VirtualEnv
-let g:python3_host_prog = expand('~/.config/nvim/env/bin/python')
-
-""" Coloring
-syntax on
-colorscheme dracula | color dracula
-highlight Pmenu guibg=white guifg=black gui=bold
-highlight Comment gui=bold
-highlight Normal gui=none
-highlight NonText guibg=none
-
-" Transparent Background (For i3 and compton)
-highlight Normal guibg=NONE ctermbg=NONE
-highlight LineNr guibg=NONE ctermbg=NONE
-
-""" Other Configurations
+""" Main Configurations
 filetype plugin indent on
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
 set incsearch ignorecase smartcase hlsearch
+set wildmode=longest,list,full wildmenu
 set ruler laststatus=2 showcmd showmode
 set list listchars=trail:»,tab:»-
-set fillchars+=vert:\
+set fillchars+=vert:\ 
 set wrap breakindent
-set encoding=UTF-8
-set number title
 set mouse=a
 set colorcolumn=80
-
-""" Plugin Configurations
-
-" NERDTree
-let NERDTreeShowHidden=1
-let g:NERDTreeDirArrowExpandable = '↠'
-let g:NERDTreeDirArrowCollapsible = '↡'
-
-" Goyo
-function! s:goyo_enter()
-    set eventignore=FocusGained
-
-    set noshowmode noshowcmd
-
-    let b:quitting = 0
-    let b:quitting_bang = 0
-    autocmd QuitPre <buffer> let b:quitting = 1
-    cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
-
-    if has('gui_running')
-        set fullscreen
-        set linespace=7
-        set number
-    elseif exists('$TMUX')
-        silent !tmux set status off
-    endif
-endfunction
-
-function! s:goyo_leave()
-    set eventignore=
-
-    " Quit Vim if this is the only remaining buffer
-    if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
-        if b:quitting_bang
-            qa!
-        else
-            qa
-        endif
-    endif
-endfunction
-
-let g:goyo_linenr=1
-autocmd! User GoyoEnter call <SID>goyo_enter()
-autocmd! User GoyoLeave call <SID>goyo_leave()
-
-" Airline
-let g:airline_powerline_fonts = 1
-let g:airline_section_z = ' %{strftime("%-I:%M %p")}'
-let g:airline_skip_empty_sections = 1
-let g:airline#extensions#tabline#enabled = 1
-" let g:webdevicons_enable_airline_statusline = 1
-let g:airline#extensions#ale#enabled = 1
-
-" Neovim :Terminal
-tmap <Esc> <C-\><C-n>
-tmap <C-w> <Esc><C-w>
-"tmap <C-d> <Esc>:q<CR>
-autocmd BufWinEnter,WinEnter term://* startinsert
-autocmd BufLeave term://* stopinsert
-
-" bottom terminal
-function OpenBottomTerminal()
-    if (&buftype !=# 'terminal' && &ft !=# 'vim-plug' && &ft !=# 'ale-fix-suggest')
-        belowright split | term
-        " don't highlight words in the terminal as red:
-        " :syntax off
-    endif
-endfunction
-autocmd FileType * if &ft != 'gitcommit' | call OpenBottomTerminal() | endif
-
-" Deoplete
-let g:deoplete#enable_at_startup = 1
-" Disable documentation window
-set completeopt-=preview
-
-" vim-pydocstring
-let g:pydocstring_doq_path = '~/.config/nvim/env/bin/doq'
-
-" Supertab
-let g:SuperTabDefaultCompletionType = "<C-n>"
-
-" Ultisnips
-let g:UltiSnipsExpandTrigger="<C-Space>"
-let g:UltiSnipsJumpForwardTrigger="<Tab>"
-let g:UltiSnipsJumpBackwardTrigger="<C-x>"
-
-" EasyAlign
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-
-" indentLine
-let g:indentLine_char = '▏'
-let g:indentLine_color_gui = '#363949'
-
-" fzf-vim
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-s': 'split',
-  \ 'ctrl-v': 'vsplit' }
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'Type'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Character'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
+set textwidth=0
+set hidden
+set number
+set title
 
 """ Filetype-Specific Configurations
-
-function GitCommitEditor()
-    " https://vi.stackexchange.com/a/13297
-
-    " :z
-    " normal zz  " set the cursor to the top
-
-    " Check spelling.
-    setlocal spell
-    " Make bad spelling very obvious!
-    :hi SpellBad ctermbg=red ctermbg=white guibg=red guifg=white
-
-    " Never auto-indent.
-    setlocal indentexpr=''
-
-    " No literal tabs, indent 4.
-    setlocal expandtab shiftwidth=4 tabstop=4
-
-    " Margin for emails, make it obvious where 72 characters is.
-    setlocal textwidth=72
-    setlocal colorcolumn=+1
-
-    " Strip space on save.
-    fun! <SID>StripTrailingWhitespaces()
-        let l = line(".")
-        let c = col(".")
-        %s/\s\+$//e
-        call cursor(l, c)
-    endfun
-    autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
-
-    :Goyo 72
-endfun
-autocmd FileType gitcommit call GitCommitEditor()
 
 " HTML, XML, Jinja
 autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
@@ -231,6 +84,302 @@ autocmd FileType htmldjango inoremap {# {#  #}<left><left><left>
 autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
+""" Coloring
+
+" Functions and autocmds to run whenever changing colorschemes
+function! TransparentBackground()
+    highlight Normal guibg=NONE ctermbg=NONE
+    highlight LineNr guibg=NONE ctermbg=NONE
+    set fillchars+=vert:\│
+    highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
+    highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
+endfunction
+
+augroup MyColors
+    autocmd!
+    autocmd ColorScheme * call TransparentBackground()
+augroup END
+
+colorscheme kanagawa-dragon
+
+""" Core plugin configuration (vim)
+
+" nvim-cmp
+set completeopt=menu,menuone,noselect
+
+" signify
+let g:signify_sign_add = '│'
+let g:signify_sign_delete = '│'
+let g:signify_sign_change = '│'
+hi DiffDelete guifg=#ff5555 guibg=none
+
+" Disable concealing json and markdown syntax (e.g. ```)
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
+
+" context.vim
+let g:context_nvim_no_redraw = 1
+
+" Python
+let g:nvim_python_venv = expand('~/.config/nvim/env')
+let g:python3_host_prog = nvim_python_venv . '/bin/python3'
+let g:pydocstring_doq_path = nvim_python_venv . '/bin/doq'
+
+""" Core plugin configuration (lua)
+lua << EOF
+-- === nvim-treesitter
+require('nvim-treesitter.config').setup {
+    ensure_installed = {
+        'python',
+        'comment',
+        'lua',
+        --'typescript',
+        --'javascript',
+    },
+    sync_install = false,
+    highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+    },
+}
+-- === nvim-cmp
+local kind_icons = {
+    Text = "",
+    Method = "",
+    Function = "",
+    Constructor = "",
+    Field = "",
+    Variable = "",
+    Class = "ﴯ",
+    Interface = "",
+    Module = "",
+    Property = "ﰠ",
+    Unit = "",
+    Value = "",
+    Enum = "",
+    Keyword = "",
+    Snippet = "",
+    Color = "",
+    File = "",
+    Reference = "",
+    Folder = "",
+    EnumMember = "",
+    Constant = "",
+    Struct = "",
+    Event = "",
+    Operator = "",
+    TypeParameter = ""
+}
+
+local has_words_before = function()
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local feedkey = function(key, mode)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
+
+-- Setup nvim-cmp.
+local cmp = require'cmp'
+
+cmp.setup({
+    snippet = {
+        -- REQUIRED - you must specify a snippet engine
+        expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+        end,
+    },
+    window = {
+        -- completion = cmp.config.window.bordered(),
+        -- documentation = cmp.config.window.bordered(),
+        -- Source for below custom borders: https://github.com/hrsh7th/nvim-cmp/pull/472#issuecomment-1098381334
+        completion = {
+            border = {'╭', '─', '╮', '│', '╯', '─', '╰', '│'},
+            winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpPmenuBorder,CursorLine:PmenuSel,Search:None',
+        },
+        documentation = {
+            border = {'╭', '─', '╮', '│', '╯', '─', '╰', '│'},
+            winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpPmenuBorder,CursorLine:PmenuSel,Search:None',
+        },
+    },
+    mapping = cmp.mapping.preset.insert({
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        ["<Tab>"] = cmp.mapping(function(fallback) -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings for other snippet plugins
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif vim.fn["vsnip#available"](1) == 1 then
+                feedkey("<Plug>(vsnip-expand-or-jump)", "")
+            elseif has_words_before() then
+                cmp.complete()
+            else
+                fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+            end
+        end, { "i", "s" }),
+        ["<S-Tab>"] = cmp.mapping(function()
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+                feedkey("<Plug>(vsnip-jump-prev)", "")
+            end
+        end, { "i", "s" }),
+    }),
+    sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'vsnip' },
+        { name = 'path', option = { trailing_slash = true }},
+        { name = 'nvim_lsp_signature_help' },
+    }, {
+        { name = 'buffer' },
+    }),
+    formatting = {
+        format = function(entry, vim_item)
+            -- Kind icons
+            vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
+            -- Source
+            vim_item.menu = ({
+                buffer = "[Buffer]",
+                nvim_lsp = "[LSP]",
+                luasnip = "[LuaSnip]",
+                nvim_lua = "[Lua]",
+                latex_symbols = "[LaTeX]",
+            })[entry.source.name]
+            return vim_item
+        end
+    },
+})
+
+-- Set configuration for specific filetype.
+cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+        { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+    }, {
+        { name = 'buffer' },
+    })
+})
+
+-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline('/', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = 'buffer' }
+    }
+})
+
+-- DISABLED: cmdline completion breaks after first search (hrsh7th/nvim-cmp#1511)
+-- cmp.setup.cmdline(':', {
+--     mapping = cmp.mapping.preset.cmdline(),
+--     sources = cmp.config.sources({
+--         { name = 'path', option = { trailing_slash = true }}
+--     }, {
+--         { name = 'cmdline' }
+--     })
+-- })
+-- === LSP (vim.lsp.config, Neovim 0.11+)
+-- Diagnostic keymaps
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+
+-- LSP keymaps (set on attach via LspAttach autocmd)
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    callback = function(ev)
+        vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        local o = { buffer = ev.buf }
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, o)
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, o)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, o)
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, o)
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, o)
+        vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, o)
+        vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, o)
+        vim.keymap.set('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, o)
+        vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, o)
+        vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, o)
+        vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, o)
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, o)
+        vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format() end, o)
+    end,
+})
+
+-- LSP server config
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+vim.lsp.config('pyright', {
+    capabilities = capabilities,
+    cmd = { vim.g.nvim_python_venv .. "/bin/python", "-m", "pyright"},
+})
+vim.lsp.enable('pyright')
+
+-- === telescope.nvim
+require('telescope').load_extension('fzf')
+-- === lualine.nvim
+require('lualine').setup {
+    options = {
+        icons_enabled = true,
+        theme = 'auto',
+        --component_separators = { left = '', right = ''},
+        component_separators = { left = '╲', right = '╱' },
+        --section_separators = { left = '', right = ''},
+        section_separators = { left = '', right = '' },
+        disabled_filetypes = { 'NvimTree' },
+        always_divide_middle = true,
+        globalstatus = false,
+    },
+    sections = {
+        lualine_a = {'mode'},
+        lualine_b = {'branch', 'diff', 'diagnostics'},
+        lualine_c = {'filename'},
+        lualine_x = {'encoding', 'fileformat'},
+        lualine_y = {'filetype'},
+        lualine_z = {{'os.date("%-I:%M %p")', color = {gui='NONE'}}}
+    },
+    inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {'filename'},
+        lualine_x = {'filetype'},
+        lualine_y = {},
+        lualine_z = {}
+    },
+    tabline = {},
+    extensions = {}
+}
+-- === nvim-tree
+require'nvim-tree'.setup {
+    git = {
+        enable = true,
+        ignore = false,
+        timeout = 400,
+    },
+}
+-- === indent-blankline
+require('ibl').setup {
+    indent = { char = '▏' },
+    scope = { enabled = false },
+}
+-- === diagnostics
+local signs = { Error = "✘", Warn = "", Hint = "•", Info = "" }
+
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
+vim.diagnostic.config({
+    virtual_text = {
+        prefix = '●', -- Could be '●', '▎', 'x'
+    }
+})
+EOF
+
 """ Custom Functions
 
 " Trim Whitespaces
@@ -240,32 +389,33 @@ function! TrimWhitespace()
     call winrestview(l:save)
 endfunction
 
-" Dracula Mode (Dark)
-function! ColorDracula()
-    let g:airline_theme='dracula'
-    colorscheme dracula | color dracula
-    IndentLinesEnable
-endfunction
+""" Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 
-""" Custom Mappings
-
+" Core
 let mapleader=","
-nmap <leader>q :NERDTreeToggle<CR>
+nmap <leader>q :NvimTreeFindFileToggle<CR>
 nmap \ <leader>q
-nmap <leader>ee :Colors<CR>
-nmap <leader>ea :AirlineTheme
 nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 xmap <leader>a gaip*
 nmap <leader>a gaip*
-nmap <leader>s <C-w>s<C-w>j:terminal<CR>
-nmap <leader>vs <C-w>v<C-w>l:terminal<CR>
-nmap <leader>d <Plug>(pydocstring)
-nmap <leader>f :Files<CR>
-nmap <leader>g :Goyo<CR>
+nmap <leader>h :RainbowParentheses!!<CR>
 nmap <leader>j :set filetype=journal<CR>
 nmap <leader>k :ColorToggle<CR>
-autocmd FileType python nmap <leader>x :0,$!~/.config/nvim/env/bin/python -m yapf<CR>
+nmap <leader>l :Limelight!!<CR>
+xmap <leader>l :Limelight!!<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
+
+" Python
+autocmd Filetype python nmap <leader>d <Plug>(pydocstring)
+autocmd FileType python nmap <leader>p :Black<CR>
+
+" Telescope mappings
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
+nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
