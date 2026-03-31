@@ -26,12 +26,6 @@
 -   usage: `show` or `show dir/` or `show file`
 -   I wrote this one myself (this wasn't hard to write)
 
-### [`globalprotect`](./aliases/globalprotect)
-
--   quits the GlobalProtect VPN app
--   usage: `globalprotect start` or `globalprotect stop`
--   adapted from <https://gist.github.com/kaleksandrov/3cfee92845a403da995e7e44ba771183>
-
 ## Setup
 
 ```zsh
