@@ -1,4 +1,3 @@
-tap "homebrew/services"
 brew "bat"
 brew "cloc"
 brew "node"
