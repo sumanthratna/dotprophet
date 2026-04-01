@@ -44,7 +44,7 @@ Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
-Plug 'rebelot/kanagawa.nvim'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -100,7 +100,7 @@ augroup MyColors
     autocmd ColorScheme * call TransparentBackground()
 augroup END
 
-colorscheme kanagawa-dragon
+colorscheme catppuccin-frappe
 
 """ Core plugin configuration (vim)
 

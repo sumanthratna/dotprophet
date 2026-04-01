@@ -1,3 +1,4 @@
 #!/usr/bin/env zsh
 
+export BAT_THEME="Catppuccin Frappe"
 export MANPAGER="sh -c 'col -bx | bat -plman'"
