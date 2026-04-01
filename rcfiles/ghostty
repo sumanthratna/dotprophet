@@ -1,1 +1,7 @@
 theme = Catppuccin Frappe
+
+macos-option-as-alt = left
+keybind = super+t=text:\x1bt
+keybind = super+r=text:\x1br
+keybind = super+d=text:\x1bd
+confirm-close-surface = false

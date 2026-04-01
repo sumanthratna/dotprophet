@@ -1,5 +1,22 @@
 #!/bin/env zsh
 
+# Auto-attach to Zellij in Ghostty (not in SSH, not nested)
+if [[ -z "$ZELLIJ" && -z "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; then
+  session_file="/tmp/zellij-next-session"
+  if [[ -f "$session_file" ]]; then
+    session=$(<"$session_file")
+    rm -f "$session_file"
+    exec zellij attach --create "$session"
+  else
+    sessions=$(zellij list-sessions -s 2>/dev/null)
+    if [[ -z "$sessions" ]]; then
+      exec zellij attach --create default
+    fi
+    session=$(echo "$sessions" | fzf --prompt="Zellij session: ")
+    exec zellij attach --create "${session:-default}"
+  fi
+fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -29,4 +46,4 @@ zsh-defer source $HOME/dotprophet/envvars.sh
 zsh-defer source $HOME/dotprophet/aliases.sh
 
 fpath+=~/.zfunc
-zsh-defer autoload -Uz compinit && compinit
+zsh-defer -c 'autoload -Uz compinit && compinit'

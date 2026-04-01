@@ -59,6 +59,10 @@ ln -s ~/dotprophet/ssh_config ~/.ssh/config
 mkdir -p ~/.config/ghostty
 ln -s ~/dotprophet/rcfiles/ghostty ~/.config/ghostty/config
 
+mkdir -p ~/.config
+ln -s ~/dotprophet/rcfiles/zellij ~/.config/zellij
+# Raycast: Preferences > Extensions > Script Commands > Add Directories > ~/dotprophet/raycast-scripts
+
 defaults write com.apple.finder AppleShowAllFiles YES
 ```
 

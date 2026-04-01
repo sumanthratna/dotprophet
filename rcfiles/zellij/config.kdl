@@ -1,0 +1,22 @@
+theme "catppuccin-frappe"
+
+// Session resurrection: persist layout + scrollback across restarts
+session_serialization true
+serialize_pane_viewport true
+scrollback_lines_to_serialize 10000
+
+default_layout "compact"
+
+copy_command "pbcopy"
+copy_on_select true
+
+pane_frames false
+on_force_close "detach"
+
+keybinds {
+    shared_except "locked" {
+        bind "Alt t" { NewTab; SwitchToMode "Normal"; }
+        bind "Alt r" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "Alt d" { NewPane "Down"; SwitchToMode "Normal"; }
+    }
+}
