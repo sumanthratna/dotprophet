@@ -1,5 +1,9 @@
 #!/bin/env zsh
 
+# Ensure ~/.local/bin is in PATH before Zellij auto-attach, so resurrected
+# commands (e.g. claude --resume) are found when Zellij inherits this PATH.
+export PATH="$HOME/.local/bin:$PATH"
+
 # Auto-attach to Zellij in Ghostty (not in SSH, not nested)
 if [[ -z "$ZELLIJ" && -z "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; then
   session_file="/tmp/zellij-next-session"
