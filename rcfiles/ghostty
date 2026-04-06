@@ -13,4 +13,6 @@ keybind = super+digit_6=text:\x1b6
 keybind = super+digit_7=text:\x1b7
 keybind = super+digit_8=text:\x1b8
 keybind = super+digit_9=text:\x1b9
+keybind = ctrl+tab=text:\x1bn
+keybind = ctrl+shift+tab=text:\x1bp
 confirm-close-surface = false

@@ -27,6 +27,7 @@ keybinds {
         bind "Alt 7" { GoToTab 7; SwitchToMode "Normal"; }
         bind "Alt 8" { GoToTab 8; SwitchToMode "Normal"; }
         bind "Alt 9" { GoToTab 9; SwitchToMode "Normal"; }
-
+        bind "Alt n" { GoToNextTab; SwitchToMode "Normal"; }
+        bind "Alt p" { GoToPreviousTab; SwitchToMode "Normal"; }
     }
 }
