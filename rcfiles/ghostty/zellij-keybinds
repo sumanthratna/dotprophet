@@ -1,6 +1,3 @@
-theme = Catppuccin Frappe
-
-macos-option-as-alt = left
 keybind = super+t=text:\x1bt
 keybind = super+r=text:\x1br
 keybind = super+d=text:\x1bd
@@ -15,4 +12,3 @@ keybind = super+digit_8=text:\x1b8
 keybind = super+digit_9=text:\x1b9
 keybind = ctrl+tab=text:\x1bn
 keybind = ctrl+shift+tab=text:\x1bp
-confirm-close-surface = false

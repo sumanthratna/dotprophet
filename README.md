@@ -59,7 +59,10 @@ nvim -es -u ~/.config/nvim/init.vim -i NONE -c "PlugInstall" -c "qa"
 ln -s ~/dotprophet/ssh_config ~/.ssh/config
 
 mkdir -p ~/.config/ghostty
-ln -s ~/dotprophet/rcfiles/ghostty ~/.config/ghostty/config
+ln -s ~/dotprophet/rcfiles/ghostty/config ~/.config/ghostty/config
+if command -v zellij &>/dev/null; then
+  ln -s ~/dotprophet/rcfiles/ghostty/zellij-keybinds ~/.config/ghostty/zellij-keybinds
+fi
 
 mkdir -p ~/.config
 ln -s ~/dotprophet/rcfiles/zellij ~/.config/zellij
