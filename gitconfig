@@ -1,6 +1,7 @@
 [user]
 	name = Sumanth Ratna
-	email = sumanthratna@gmail.com
+[include]
+	path = ~/.gitconfig.local
 [tag]
 	forceSignAnnotated = true
 [core]
