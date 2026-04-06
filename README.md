@@ -45,6 +45,8 @@ git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
 ln -s ~/dotprophet/rcfiles/zshrc ~/.zshrc
 ln -s ~/dotprophet/gitconfig ~/.gitconfig
 
+git config --file ~/.gitconfig.local user.email "<EMAIL>"
+
 python3.11 -m venv ~/.config/nvim/env
 source ~/.config/nvim/env/bin/activate
 python3 -m pip install --upgrade pip
