@@ -17,3 +17,10 @@ keybind = super+e=text:\x1be
 keybind = super+b=text:\x1bb
 keybind = super+f=text:\x1bf
 keybind = super+shift+g=text:\x1bc
+keybind = alt+t=ignore
+keybind = alt+r=ignore
+keybind = alt+d=ignore
+keybind = alt+w=ignore
+keybind = alt+e=ignore
+keybind = alt+b=ignore
+keybind = alt+f=ignore
