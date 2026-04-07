@@ -19,6 +19,12 @@
       "title": "Open Zellij Session",
       "description": "Open a Zellij session in a new Ghostty window",
       "mode": "view"
+    },
+    {
+      "name": "restart-zellij",
+      "title": "Restart Zellij",
+      "description": "Kill all active Zellij sessions and reattach them",
+      "mode": "no-view"
     }
   ],
   "dependencies": {
