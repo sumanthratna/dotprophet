@@ -1,3 +1,4 @@
 #!/usr/bin/env zsh
 
 export FZF_DEFAULT_OPTS="--popup"
+export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {} 2>/dev/null || eza -la {}'"
