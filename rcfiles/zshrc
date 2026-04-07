@@ -37,6 +37,7 @@ source "${HOME}/.zgen/zgen.zsh"
 if ! zgen saved; then
     zgen loadall <<EOPLUGINS
         Aloxaf/fzf-tab
+        junegunn/fzf-git.sh . main
         romkatv/zsh-defer
         romkatv/powerlevel10k powerlevel10k
         larkery/zsh-histdb
@@ -52,3 +53,16 @@ zsh-defer source $HOME/dotprophet/aliases.sh
 fpath+=~/.zfunc
 zsh-defer -c 'autoload -Uz compinit && compinit'
 source <(fzf --zsh)
+
+# Rebind fzf-git.sh from Ctrl-G to Alt-G (Ctrl-G is Zellij's locked-mode toggle)
+for m in emacs vicmd viins; do
+  bindkey -M $m -r '^[g' 2>/dev/null  # unbind get-line so ^[g works as prefix
+  for o in files branches tags remotes hashes stashes lreflogs each_ref worktrees; do
+    bindkey -M $m -r "^g^${o[1]}" 2>/dev/null
+    bindkey -M $m -r "^g${o[1]}" 2>/dev/null
+    eval "bindkey -M $m '^[g^${o[1]}' fzf-git-$o-widget 2>/dev/null"
+    eval "bindkey -M $m '^[g${o[1]}' fzf-git-$o-widget 2>/dev/null"
+  done
+  bindkey -M $m -r '^g?' 2>/dev/null
+  bindkey -M $m '^[g?' 'fzf-git-?list_bindings-widget' 2>/dev/null
+done
