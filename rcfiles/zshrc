@@ -51,3 +51,4 @@ zsh-defer source $HOME/dotprophet/aliases.sh
 
 fpath+=~/.zfunc
 zsh-defer -c 'autoload -Uz compinit && compinit'
+source <(fzf --zsh)
