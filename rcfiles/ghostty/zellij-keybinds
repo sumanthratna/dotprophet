@@ -12,3 +12,7 @@ keybind = super+digit_8=text:\x1b8
 keybind = super+digit_9=text:\x1b9
 keybind = ctrl+tab=text:\x1bn
 keybind = ctrl+shift+tab=text:\x1bp
+keybind = super+w=text:\x1bw
+keybind = super+e=text:\x1be
+keybind = super+b=text:\x1bb
+keybind = super+f=text:\x1bf

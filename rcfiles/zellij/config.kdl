@@ -29,5 +29,18 @@ keybinds {
         bind "Alt 9" { GoToTab 9; SwitchToMode "Normal"; }
         bind "Alt n" { GoToNextTab; SwitchToMode "Normal"; }
         bind "Alt p" { GoToPreviousTab; SwitchToMode "Normal"; }
+        bind "Alt w" { CloseTab; SwitchToMode "Normal"; }
+        bind "Alt e" { SwitchToMode "RenameTab"; TabNameInput 0; }
+        bind "Alt b" { BreakPane; SwitchToMode "Normal"; }
+        bind "Alt f" { SwitchToMode "EnterSearch"; SearchInput 0; }
+        unbind "Ctrl t"
+    }
+    entersearch {
+        bind "Esc" { SwitchToMode "Normal"; }
+    }
+    search {
+        bind "Enter" { Search "down"; }
+        bind "Shift Enter" { Search "up"; }
+        bind "Esc" { SwitchToMode "Normal"; }
     }
 }
