@@ -33,7 +33,7 @@ async function openSession(name: string) {
   const script = `
 tell application "Ghostty"
   set cfg to new surface configuration
-  set command of cfg to "/opt/homebrew/bin/zellij attach --create ${name}"
+  set command of cfg to "/bin/zsh -lc '/opt/homebrew/bin/zellij attach --create ${name}'"
   new window with configuration cfg
   activate
 end tell`;
