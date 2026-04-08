@@ -66,3 +66,7 @@ for m in emacs vicmd viins; do
   bindkey -M $m -r '^g?' 2>/dev/null
   bindkey -M $m '^[g?' 'fzf-git-?list_bindings-widget' 2>/dev/null
 done
+
+# Option+Arrow word movement (Ghostty remaps to Ctrl+Arrow CSI to bypass Zellij)
+bindkey '\e[1;5D' backward-word
+bindkey '\e[1;5C' forward-word
