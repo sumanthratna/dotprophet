@@ -38,6 +38,24 @@ eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 cd ~/dotprophet
 brew bundle
 
+# Disable Spotlight Cmd+Space and set Raycast hotkey to Cmd+Space
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 "
+<dict>
+  <key>enabled</key><false/>
+  <key>value</key>
+  <dict>
+    <key>parameters</key>
+    <array>
+      <integer>32</integer>
+      <integer>49</integer>
+      <integer>1048576</integer>
+    </array>
+    <key>type</key><string>standard</string>
+  </dict>
+</dict>"
+/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+defaults write com.raycast.macos raycastGlobalHotkey -string "Command-49"
+
 cd ~
 
 git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
@@ -60,12 +78,13 @@ ln -s ~/dotprophet/ssh_config ~/.ssh/config
 
 mkdir -p ~/.config/ghostty
 ln -s ~/dotprophet/rcfiles/ghostty/config ~/.config/ghostty/config
-if command -v zellij &>/dev/null; then
-  ln -s ~/dotprophet/rcfiles/ghostty/zellij-keybinds ~/.config/ghostty/zellij-keybinds
-fi
+ln -s ~/dotprophet/rcfiles/ghostty/zellij-keybinds ~/.config/ghostty/zellij-keybinds
 
 mkdir -p ~/.config
 ln -s ~/dotprophet/rcfiles/zellij ~/.config/zellij
+
+# Register Raycast extensions (npm run dev only needs to register, Ctrl+C immediately)
+pushd ~/dotprophet/raycast/extensions/zellij && npm install && npm run dev; popd
 
 defaults write com.apple.finder AppleShowAllFiles YES
 ```
