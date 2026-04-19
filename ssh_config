@@ -12,6 +12,10 @@ Host *.zoo
 	HostName %h.cs.yale.edu
 	User sr2437
 
+Host bouchet
+	HostName %h.ycrc.yale.edu
+	User sr2437
+
 Host consign mercury
 	HostName %h.pmacs.upenn.edu
 	User sratna04
