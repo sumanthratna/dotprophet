@@ -314,7 +314,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 vim.lsp.config('pyright', {
     capabilities = capabilities,
-    cmd = { vim.g.nvim_python_venv .. "/bin/python", "-m", "pyright"},
+    cmd = { vim.g.nvim_python_venv .. "/bin/pyright-langserver", "--stdio" },
 })
 vim.lsp.enable('pyright')
 
