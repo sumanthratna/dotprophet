@@ -5,7 +5,7 @@
 export PATH="$HOME/.local/bin:$PATH"
 
 # Auto-attach to Zellij in Ghostty (not in SSH, not nested)
-if command -v zellij &>/dev/null && [[ -z "$ZELLIJ" && -z "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; then
+if [[ -z "$ZELLIJ" && -z "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; then
   session_file="/tmp/zellij-next-session"
   if [[ -f "$session_file" ]]; then
     session=$(<"$session_file")
@@ -33,6 +33,7 @@ setopt CORRECT_ALL
 setopt INTERACTIVE_COMMENTS
 
 export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+ZGEN_AUTOLOAD_COMPINIT=0
 source "${HOME}/.zgen/zgen.zsh"
 if ! zgen saved; then
     zgen loadall <<EOPLUGINS
