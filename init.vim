@@ -86,6 +86,21 @@ autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 """ Coloring
 
+" Make LSP diagnostic underlines wavy (catppuccin defaults to straight underline).
+lua << EOF
+require('catppuccin').setup({
+    lsp_styles = {
+        underlines = {
+            errors = { "undercurl" },
+            warnings = { "undercurl" },
+            information = { "undercurl" },
+            hints = { "undercurl" },
+            ok = { "undercurl" },
+        },
+    },
+})
+EOF
+
 " Functions and autocmds to run whenever changing colorschemes
 function! TransparentBackground()
     highlight Normal guibg=NONE ctermbg=NONE
