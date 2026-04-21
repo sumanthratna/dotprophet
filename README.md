@@ -83,6 +83,7 @@ ln -s ~/dotprophet/rcfiles/ghostty/zellij-keybinds ~/.config/ghostty/zellij-keyb
 mkdir -p ~/.config
 ln -s ~/dotprophet/rcfiles/zellij ~/.config/zellij
 
+curl -fsSL https://claude.ai/install.sh | bash
 mkdir -p ~/.claude/hooks
 ln -s ~/dotprophet/rcfiles/claude/settings.json ~/.claude/settings.json
 ln -s ~/dotprophet/rcfiles/claude/hooks/notify-focus.sh ~/.claude/hooks/notify-focus.sh
