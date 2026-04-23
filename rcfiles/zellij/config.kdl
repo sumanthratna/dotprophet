@@ -34,6 +34,7 @@ keybinds {
         bind "Alt b" { BreakPane; SwitchToMode "Normal"; }
         bind "Alt f" { SwitchToMode "EnterSearch"; SearchInput 0; }
         unbind "Ctrl t"
+        unbind "Ctrl o"
     }
     entersearch {
         bind "Esc" { SwitchToMode "Normal"; }
