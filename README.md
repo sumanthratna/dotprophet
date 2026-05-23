@@ -65,7 +65,7 @@ ln -s ~/dotprophet/gitconfig ~/.gitconfig
 
 git config --file ~/.gitconfig.local user.email "<EMAIL>"
 
-# LazyVim-based config: lazy.nvim installs plugins, Mason auto-installs LSPs/formatters (basedpyright, ruff) on first launch — no separate Python venv needed.
+mkdir -p ~/.config
 ln -s ~/dotprophet/rcfiles/nvim ~/.config/nvim
 nvim --headless "+Lazy! sync" +qa
 
@@ -75,7 +75,6 @@ mkdir -p ~/.config/ghostty
 ln -s ~/dotprophet/rcfiles/ghostty/config ~/.config/ghostty/config
 ln -s ~/dotprophet/rcfiles/ghostty/zellij-keybinds ~/.config/ghostty/zellij-keybinds
 
-mkdir -p ~/.config
 ln -s ~/dotprophet/rcfiles/zellij ~/.config/zellij
 
 mkdir -p ~/.claude/hooks
