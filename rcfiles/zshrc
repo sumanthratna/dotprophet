@@ -21,6 +21,17 @@ if [[ -z "$ZELLIJ" && -z "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; t
   fi
 fi
 
+# Ghostty shell integration for shells not directly spawned by Ghostty.
+# https://github.com/ghostty-org/ghostty/blob/bfe633a9487892ff3d27ed727db540267f22ef90/src/shell-integration/zsh/ghostty-integration#L20-L36
+# The block above exec's into Zellij in the outermost zsh before Ghostty's
+# auto-injection can run, so every interactive shell we ever see is a
+# Zellij child and has to source the integration explicitly. Without this,
+# the `ssh` wrapper that forwards COLORTERM/TERM_PROGRAM and uploads
+# xterm-ghostty terminfo to remote hosts is never installed.
+if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
+  source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
