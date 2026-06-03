@@ -3,3 +3,4 @@ theme = Catppuccin Frappe
 macos-option-as-alt = left
 config-file = ?~/.config/ghostty/zellij-keybinds
 confirm-close-surface = false
+shell-integration-features = ssh-env,ssh-terminfo
