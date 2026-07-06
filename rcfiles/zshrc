@@ -16,7 +16,19 @@ if [[ -z "$ZELLIJ" && -z "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; t
     if [[ -z "$sessions" ]]; then
       exec zellij attach --create default
     fi
-    session=$(echo "$sessions" | fzf --prompt="Zellij session: ")
+    # --print-query: line 1 is the typed query, line 2 (if any) the selection.
+    # Exit 0 = selection made, 1 = no match (create session named by the query),
+    # 130 = esc/ctrl-c (keep old fallback to "default").
+    # ⌦ (fn+⌫ on a laptop) deletes the highlighted session; without --force
+    # only EXITED sessions are removed, live ones are silently left alone.
+    result=$(echo "$sessions" | fzf --prompt="Zellij session: " --print-query \
+      --header="enter: attach · type new name: create · ⌦: delete" \
+      --bind='del:execute-silent(zellij delete-session {})+reload(zellij list-sessions -s 2>/dev/null)')
+    case $? in
+      0) session=${result##*$'\n'} ;;   # last line: the selection
+      1) session=${result%%$'\n'*} ;;   # first line: the query — new session name
+      *) session= ;;
+    esac
     exec zellij attach --create "${session:-default}"
   fi
 fi
