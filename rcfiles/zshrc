@@ -94,3 +94,6 @@ done
 # Option+Arrow word movement (Ghostty remaps to Ctrl+Arrow CSI to bypass Zellij)
 bindkey '\e[1;5D' backward-word
 bindkey '\e[1;5C' forward-word
+
+# Cmd+Backspace deletes to start of line (Ghostty sends ^U, whose zsh default is kill-whole-line)
+bindkey '^U' backward-kill-line
