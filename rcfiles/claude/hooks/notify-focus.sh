@@ -3,6 +3,9 @@
 # click handler runs later in a detached process without those env vars.
 set -uo pipefail
 
+# cmux wraps claude and posts its own notifications; avoid duplicates.
+[[ -n ${CMUX_WORKSPACE_ID:-} ]] && exit 0
+
 payload=$(cat)
 IFS=$'\t' read -r msg cwd < <(
     jq -r '[.message // "Claude is awaiting input", .cwd // ""] | @tsv' <<<"$payload"
