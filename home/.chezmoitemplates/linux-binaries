@@ -1,0 +1,1 @@
+{{- and (eq .chezmoi.os "linux") (eq .chezmoi.arch "amd64") -}}

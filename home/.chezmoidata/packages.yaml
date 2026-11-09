@@ -1,0 +1,42 @@
+# One entry per tool.
+#   brew:   Homebrew formula, installed on macOS by `brew bundle` when this list changes.
+#   github: release binary, downloaded by chezmoi into ~/.local/bin on Linux x86_64
+#           (see .chezmoitemplates/linux-binaries) and refreshed weekly:
+#     repo, asset   GitHub repo and a glob on the release file name
+#     type          archive-file (default: one file out of an archive), file, or archive (whole tree)
+#     strip, path   leading dirs to strip, then the binary's path inside the archive
+#     bin           name in ~/.local/bin (default: basename of path)
+#     decompress    for type file, e.g. gzip
+#     dest          for type archive, where to unpack it
+# Entries without github are not installed on Linux by this list.
+packages:
+  tools:
+    - brew: bat
+      github: { repo: sharkdp/bat, asset: "bat-*-x86_64-unknown-linux-musl.tar.gz", strip: 1, path: bat }
+    - brew: chezmoi  # Coder: install.sh installs it
+    - brew: cloc
+      github: { repo: AlDanial/cloc, asset: "cloc-*.pl", type: file, bin: cloc }  # Perl script
+    - brew: eza
+      github: { repo: eza-community/eza, asset: "eza_x86_64-unknown-linux-musl.tar.gz", path: eza }
+    - brew: fd
+      github: { repo: sharkdp/fd, asset: "fd-*-x86_64-unknown-linux-musl.tar.gz", strip: 1, path: fd }
+    - brew: fzf
+      github: { repo: junegunn/fzf, asset: "fzf-*-linux_amd64.tar.gz", path: fzf }
+    - brew: gh
+      github: { repo: cli/cli, asset: "gh_*_linux_amd64.tar.gz", strip: 1, path: bin/gh }
+    - brew: git-delta
+      github: { repo: dandavison/delta, asset: "delta-*-x86_64-unknown-linux-musl.tar.gz", strip: 1, path: delta }
+    - brew: jq
+      github: { repo: jqlang/jq, asset: "jq-linux-amd64", type: file, bin: jq }
+    - brew: lazygit
+      github: { repo: jesseduffield/lazygit, asset: "lazygit_*_linux_x86_64.tar.gz", path: lazygit }
+    - brew: neovim
+      # Needs its lib/ and share/ dirs, so it's unpacked whole; ~/.local/bin/nvim links into it.
+      github: { repo: neovim/neovim, asset: "nvim-linux-x86_64.tar.gz", type: archive, strip: 1, dest: .local/share/nvim-linux }
+    - brew: ripgrep
+      github: { repo: BurntSushi/ripgrep, asset: "ripgrep-*-x86_64-unknown-linux-musl.tar.gz", strip: 1, path: rg }
+    - brew: tree-sitter-cli
+      github: { repo: tree-sitter/tree-sitter, asset: "tree-sitter-linux-x64.gz", type: file, decompress: gzip, bin: tree-sitter }
+  casks:  # macOS only
+    - font-jetbrains-mono-nerd-font
+    - raycast

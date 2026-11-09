@@ -1,4 +1,9 @@
 {
+  "env": {
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/harden",
+    "FORCE_HYPERLINK": "1",
+    "CLAUDE_CODE_RETRY_WATCHDOG": "1"
+  },
   "attribution": {
     "commit": "",
     "pr": ""
@@ -20,12 +25,17 @@
       }
     ]
   },
+  "worktree": {
+    "baseRef": "fresh"
+  },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
     "document-skills@anthropic-agent-skills": true,
-    "data@knowledge-work-plugins": true
+    "skill-creator@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "cc-plugin-you-should-know@builtin": true,
+    "mattpocock-skills@mattpocock": true,
+    "harden@synced": false
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
@@ -39,17 +49,103 @@
         "source": "github",
         "repo": "anthropics/knowledge-work-plugins"
       }
+    },
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    },
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    },
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    },
+    "mattpocock": {
+      "source": {
+        "source": "github",
+        "repo": "mattpocock/skills"
+      }
     }
   },
-  "effortLevel": "high",
+  "outputStyle": "Concise",
+  "feedbackDrafts": "notify",
+  "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-fable-5-1": {
+      "effortLevel": "low"
+    },
+    "claude-opus-5": {
+      "effortLevel": "low"
+    },
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    },
+    "claude-sonnet-5": {
+      "effortLevel": "low"
+    },
+    "claude-sonnet-5-5": {
+      "effortLevel": "low"
+    },
+    "claude-haiku-5-5": {
+      "effortLevel": "low"
+    }
+  },
   "showClearContextOnPlanAccept": true,
   "askUserQuestionTimeout": "never",
   "tui": "fullscreen",
+  "voice": {
+    "enabled": false,
+    "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "editorMode": "vim",
-  "verbose": true,
   "preferredNotifChannel": "auto",
+  "autoCompactEnabled": true,
+  "terminalProgressBarEnabled": true,
   "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(terraform apply:*) in rungravity/gravity — Terraform stays human-applied per docs/deployment.md, so agent-run apply should stay soft-blocked even outside prod namespaces",
+      "Bash(aws secretsmanager put-secret-value:*) and similar write ops in rungravity/gravity — secret-store writes to the AWS Secrets Manager backing this repo's secrets.ts/secrets-manager.sh"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: rungravity (github.com:rungravity/gravity)",
+      "**Cloud provider(s)**: AWS (aws CLI usage, aws secretsmanager markers, Terraform)",
+      "**Repository visibility**: private (confirmed via gh)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: AWS Secrets Manager (scripts/secrets-manager.sh, docs/runbooks/secrets-manager.md, services/medplum-provisioner/src/secrets.ts); CI secrets ANTHROPIC_API_KEY, TURBO_TOKEN referenced by name only",
+      "**Default / protected branches**: main (default branch; Rulesets: 'Protect main' active; protected branches: main)",
+      "**CI/CD deploy targets**: merging to main builds the services image and rolls enabled staging services onto it (docs/deployment.md); Terraform stays human-applied",
+      "**Network posture**: None configured",
+      "**Source control**: this repo (rungravity/gravity, github.com:rungravity/gravity.git) and its configured remote(s) only",
+      "**Trusted internal domains**: medplum.staging.rungravity.com, api.staging.rungravity.com, staging.workbench.rungravity.com, staging.portal.rungravity.com",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: Medplum (staging: medplum.staging.rungravity.com), internal-workbench provider portal, patient-portal-api",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: HIPAA-regulated clinical/PII data flowing through FHIR resources (Medplum), .env/.env.sandbox files, infra/scenarios and infra/definitions fixtures (provenance spotty per fhir-medplum.md — check SOURCE.md); share only with audiences cleared at the [named+specifics] bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace/host/container with 'prod' or 'production' as a whole word or segment (none observed in this repo's hosts yet — staging hosts only seen)",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, node-pool resources, and any Terraform-managed resource whose name/tag carries 'prod' or 'production'; Terraform stays human-applied per docs/deployment.md",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development on Gravity (HIPAA-compliant clinic operating system, TypeScript modular monolith)",
+      "**Trusted repo**: rungravity/gravity at /Users/sumanthratna/quantum/gravity/gravity (remote github.com:rungravity/gravity.git), private — confidential material OK to commit/push here, but secrets and personal/sensitive data are never cleared by visibility alone",
+      "**Org-specific CLIs**: terraform, aws (Secrets Manager / infra), pnpm (Turborepo monorepo tooling)",
+      "**Routine under /Users/sumanthratna/quantum/gravity/gravity/ prefix**: pnpm wt:* (worktree helpers), pnpm sandbox:* (local rig + per-run sandboxes), pnpm dev/build/lint/typecheck/test scripts"
+    ]
+  },
+  "voiceEnabled": false
 }

@@ -1,0 +1,2 @@
+# To disable highlighting of comments
+ZSH_HIGHLIGHT_STYLES[comment]='fg=yellow'

@@ -1,3 +1,0 @@
-#!/bin/env zsh
-
-export PATH="$PATH:/usr/local/apache-maven-3.9.9/bin"

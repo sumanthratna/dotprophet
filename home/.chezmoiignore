@@ -1,0 +1,11 @@
+{{ if ne (includeTemplate "linux-binaries" .) "true" }}
+.local/bin/nvim
+{{ end }}
+{{ if ne .chezmoi.os "darwin" }}
+.ssh/config
+.config/zsh/aliases/fixaudio
+.config/zsh/aliases/quit
+{{ end }}
+
+# Compiled zsh caches that plugins (powerlevel10k) rewrite at runtime.
+.local/share/zsh/plugins/**/*.zwc

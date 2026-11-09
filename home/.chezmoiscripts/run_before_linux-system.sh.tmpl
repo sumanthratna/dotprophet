@@ -1,0 +1,23 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# Runs on every apply: a Coder rebuild resets everything outside ~, including
+# apt packages and the login shell in /etc/passwd.
+set -euo pipefail
+missing=()
+command -v zsh >/dev/null || missing+=(zsh)
+command -v sqlite3 >/dev/null || missing+=(sqlite3)  # zsh-histdb
+command -v cc >/dev/null || missing+=(gcc)  # nvim-treesitter builds parsers
+perl -MFile::Find -e1 2>/dev/null || missing+=(perl)  # cloc
+if (( ${#missing[@]} )); then
+  if sudo -n true 2>/dev/null; then
+    sudo apt-get update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "${missing[@]}" >/dev/null
+  else
+    echo "warning: missing ${missing[*]} and no passwordless sudo" >&2
+  fi
+fi
+zsh=$(command -v zsh) || exit 0
+user=$(id -un)
+if [[ $(getent passwd "$user" | cut -d: -f7) != "$zsh" ]]; then
+  sudo -n chsh -s "$zsh" "$user" 2>/dev/null || echo "warning: could not change login shell to zsh" >&2
+fi
+{{ end -}}

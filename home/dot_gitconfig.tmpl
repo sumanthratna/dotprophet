@@ -1,11 +1,11 @@
 [user]
 	name = Sumanth Ratna
-[include]
-	path = ~/.gitconfig.local
+	email = {{ if .work }}sumanth.ratna@rungravity.com{{ else }}sumanthratna@gmail.com{{ end }}
 [tag]
 	forceSignAnnotated = true
 [core]
 	editor = nvim
+	pager = delta --dark
 [alias]
 	# Quote / unquote a sh command, converting it to / from a git alias string
 	# taken from https://stackoverflow.com/a/39616600/7127932
@@ -18,18 +18,18 @@
 	activitytimeout = 60
 	dialtimeout = 600
 	concurrenttransfers = 1
-[credential]
-	helper = osxkeychain
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[core]
-  pager = delta --dark
 [interactive]
   diffFilter = delta --color-only
-[url "git@github.com:"]
-  insteadOf = https://github.com/
 [push]
   followTags = true
+{{- if eq .chezmoi.os "darwin" }}
+[credential]
+	helper = osxkeychain
+[url "git@github.com:"]
+  insteadOf = https://github.com/
+{{- end }}

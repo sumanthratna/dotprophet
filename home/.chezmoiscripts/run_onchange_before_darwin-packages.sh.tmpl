@@ -1,0 +1,12 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+brew bundle --file=/dev/stdin <<EOB
+{{ range .packages.tools -}}
+brew {{ .brew | quote }}
+{{ end -}}
+{{ range .packages.casks -}}
+cask {{ . | quote }}
+{{ end -}}
+EOB
+{{ end -}}

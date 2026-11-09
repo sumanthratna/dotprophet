@@ -1,3 +1,0 @@
-#!/bin/env zsh
-
-alias .f="cd $(dirname ${(%):-%N})/.."

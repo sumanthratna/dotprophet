@@ -1,0 +1,11 @@
+# zsh plugins, sourced in this order. chezmoi downloads each one to
+# ~/.local/share/zsh/plugins/<name> and refreshes it weekly.
+zshPlugins:
+  - { name: fzf-tab, repo: Aloxaf/fzf-tab, file: fzf-tab.plugin.zsh }
+  - { name: fzf-git, repo: junegunn/fzf-git.sh, file: fzf-git.sh }
+  - { name: zsh-defer, repo: romkatv/zsh-defer, file: zsh-defer.plugin.zsh }
+  - { name: powerlevel10k, repo: romkatv/powerlevel10k, file: powerlevel10k.zsh-theme }
+  - { name: zsh-histdb, repo: larkery/zsh-histdb, file: zsh-histdb.plugin.zsh }
+  - { name: zsh-autosuggestions, repo: zsh-users/zsh-autosuggestions, file: zsh-autosuggestions.plugin.zsh }
+  # Must be last.
+  - { name: zsh-syntax-highlighting, repo: zsh-users/zsh-syntax-highlighting, file: zsh-syntax-highlighting.plugin.zsh }

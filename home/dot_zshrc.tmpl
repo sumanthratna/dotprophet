@@ -1,6 +1,6 @@
 #!/bin/env zsh
 
-export PATH="$HOME/.local/bin:$PATH"
+path=(~/.local/bin $path)
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -13,28 +13,33 @@ setopt CORRECT
 setopt CORRECT_ALL
 setopt INTERACTIVE_COMMENTS
 
-export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-ZGEN_AUTOLOAD_COMPINIT=0
-source "${HOME}/.zgen/zgen.zsh"
-if ! zgen saved; then
-    zgen loadall <<EOPLUGINS
-        Aloxaf/fzf-tab
-        junegunn/fzf-git.sh . main
-        romkatv/zsh-defer
-        romkatv/powerlevel10k powerlevel10k
-        larkery/zsh-histdb
-        zsh-users/zsh-autosuggestions
-        zsh-users/zsh-syntax-highlighting
-EOPLUGINS
-    zgen save
-fi
-source $HOME/dotprophet/prompt.sh
-zsh-defer source $HOME/dotprophet/envvars.sh
-zsh-defer source $HOME/dotprophet/aliases.sh
+{{- range .zshPlugins }}
+source ~/.local/share/zsh/plugins/{{ .name }}/{{ .file }}
+{{- end }}
+fpath=(
+{{- range .zshPlugins }}
+  ~/.local/share/zsh/plugins/{{ .name }}
+{{- end }}
+  $fpath
+)
+export CLICOLOR=1
+for f in ~/.config/zsh/prompt/*(N.); do source $f; done
+# nvm and the default Node load eagerly: a process started before deferred
+# loading runs (Claude Code and its hooks) would otherwise inherit a PATH with
+# no node. --no-use skips nvm's slow default lookup; prepend its bin dir directly.
+export NVM_DIR=~/.nvm
+source $NVM_DIR/nvm.sh --no-use
+path=($NVM_DIR/versions/node/v$(<$NVM_DIR/alias/default)*/bin(Nn[-1]) $path)
+zsh-defer -c 'for f in ~/.config/zsh/envvars/*(N.); do source $f; done'
+zsh-defer -c 'for f in ~/.config/zsh/aliases/*(N.); do source $f; done'
 
 fpath+=~/.zfunc
-zsh-defer -c 'autoload -Uz compinit && compinit'
-source <(fzf --zsh)
+zsh-defer -c 'autoload -Uz compinit && compinit && source $NVM_DIR/bash_completion'
+# fzf's shell integration, regenerated only when the fzf binary changes.
+if (( $+commands[fzf] )); then
+  [[ ~/.cache/fzf.zsh -nt $commands[fzf] ]] || fzf --zsh >~/.cache/fzf.zsh 2>/dev/null
+  source ~/.cache/fzf.zsh
+fi
 
 # Rebind fzf-git.sh from Ctrl-G to Alt-G
 for m in emacs vicmd viins; do

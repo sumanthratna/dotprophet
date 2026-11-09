@@ -1,3 +1,0 @@
-#!/bin/env zsh
-
-export HOMEBREW_BUNDLE_FILE="$HOME/dotprophet/Brewfile"

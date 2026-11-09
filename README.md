@@ -1,26 +1,26 @@
 # @sumanthratna's dotfiles
 
-## Useful [Aliases](./aliases)
+## Useful [Aliases](./home/dot_config/zsh/exact_aliases)
 
-### [`quit`](./aliases/quit)
+### [`quit`](./home/dot_config/zsh/exact_aliases/quit)
 
 - quits the current terminal app in macOS
 - usage: `quit`
 
-### [`rmr`](./aliases/rmr)
+### [`rmr`](./home/dot_config/zsh/exact_aliases/rmr)
 
 - recursively removes a file
 - usage: `rmr .DS_Store`
 - adapted from <https://stackoverflow.com/a/45647470/7127932>
 
-### [`email`](./aliases/email)
+### [`email`](./home/dot_config/zsh/exact_aliases/email)
 
 - returns a list of emails given a social media handle
 - useful for when you know someone's GitHub username and need to contact them via email
 - usage: `email github AutinMitra`
 - I wrote this one myself
 
-### [`show`](./aliases/show)
+### [`show`](./home/dot_config/zsh/exact_aliases/show)
 
 - lists all the files in a pretty way, using [`eza`](https://github.com/eza-community/eza)
 - usage: `show` or `show dir/` or `show file`
@@ -28,54 +28,63 @@
 
 ## Setup
 
-```zsh
-cd ~
-git clone https://github.com/sumanthratna/dotprophet.git
+[chezmoi](https://www.chezmoi.io/) manages these dotfiles. `home/` is the
+source state (see `.chezmoiroot`); `~` is the target. Targets are macOS
+(Homebrew) and Coder workspaces (Ubuntu x86_64, where only `~` survives a
+rebuild).
 
-cd /tmp
+### Install
+
+macOS:
+
+```zsh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-cd ~/dotprophet
-brew bundle
-
-# Disable Spotlight Cmd+Space and set Raycast hotkey to Cmd+Space
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 "
-<dict>
-  <key>enabled</key><false/>
-  <key>value</key>
-  <dict>
-    <key>parameters</key>
-    <array>
-      <integer>32</integer>
-      <integer>49</integer>
-      <integer>1048576</integer>
-    </array>
-    <key>type</key><string>standard</string>
-  </dict>
-</dict>"
-/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-defaults write com.raycast.macos raycastGlobalHotkey -string "Command-49"
-
-cd ~
-
-git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
-
-ln -s ~/dotprophet/rcfiles/zshrc ~/.zshrc
-ln -s ~/dotprophet/gitconfig ~/.gitconfig
-
-git config --file ~/.gitconfig.local user.email "<EMAIL>"
-
-mkdir -p ~/.config
-ln -s ~/dotprophet/rcfiles/nvim ~/.config/nvim
-nvim --headless "+Lazy! sync" +qa
-
-ln -s ~/dotprophet/ssh_config ~/.ssh/config
-
-curl -fsSL https://claude.ai/install.sh | bash
-ln -s ~/dotprophet/rcfiles/claude/settings.json ~/.claude/settings.json
-
-defaults write com.apple.finder AppleShowAllFiles YES
+brew install chezmoi  # install.sh uses it rather than installing its own copy
+git clone https://github.com/sumanthratna/dotprophet.git ~/dotprophet
+~/dotprophet/install.sh
 ```
+
+`install.sh` asks "Work machine?" once; the answer picks the git email. Done
+when `chezmoi diff --exclude=scripts` prints nothing.
+
+Coder: set this repo as your dotfiles repo. Coder runs `install.sh` on every
+workspace start, without prompting; `CODER` being set marks it a work machine.
+
+### Changing things
+
+- **Edit the source state, then `chezmoi apply`.** `chezmoi edit --apply ~/.zshrc`
+  opens the right source file. An edit made directly in `~` is overwritten on
+  the next apply; `chezmoi re-add` copies it back into `home/` first.
+- **`rcfiles/` is the exception.** nvim (`lazy-lock.json`) and Claude Code
+  (`settings.json`) rewrite their own config, so chezmoi symlinks these into
+  `~` and either path edits the repo copy.
+- **Command-line tools** live in `home/.chezmoidata/packages.yaml`, one entry
+  per tool: `brew` installs it on macOS, `github` downloads its release binary
+  into `~/.local/bin` on Coder. An entry without `github` is macOS-only. Find
+  the release asset name with
+  `gh api repos/OWNER/REPO/releases/latest --jq '.assets[].name'`.
+- **Self-updating tools** (Claude Code, Codex) use their vendor installer in a
+  `run_once_` script under `home/.chezmoiscripts/`.
+- **zsh plugins** live in `home/.chezmoidata/zsh.yaml`, in load order.
+- **System state on Coder** (apt packages, the login shell) resets on rebuild,
+  so it belongs in `home/.chezmoiscripts/run_before_linux-system.sh.tmpl`,
+  which runs on every apply.
+- **Machine differences**: `.chezmoiignore` drops whole files per OS; inside a
+  template, branch on `.chezmoi.os` or `.work` (work vs personal machine).
+
+### Verifying
+
+- `chezmoi diff` previews an apply; `chezmoi execute-template < FILE.tmpl`
+  renders one template.
+- Coder, locally: copy the repo to `~/.config/coderv2/dotfiles` in
+  `docker run --platform linux/amd64 -e CODER=true ubuntu:24.04` (as a
+  non-root user with passwordless sudo, plus `git` and `curl`), then run
+  `install.sh`. Pass `GITHUB_TOKEN` to stay under GitHub's 60 requests/hour
+  limit. Done when every tool in `~/.local/bin` prints its version and
+  `zsh -ic exit` prints no errors.
+
+`.f` jumps to this repo.
 
 ## Terminal Workflow
 

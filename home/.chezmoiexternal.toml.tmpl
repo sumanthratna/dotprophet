@@ -1,0 +1,40 @@
+[".nvm"]
+    type = "archive"
+    url = "https://github.com/nvm-sh/nvm/archive/refs/tags/{{ (gitHubLatestRelease "nvm-sh/nvm").TagName }}.tar.gz"
+    stripComponents = 1
+    refreshPeriod = "168h"
+{{ range .zshPlugins }}
+[".local/share/zsh/plugins/{{ .name }}"]
+    type = "archive"
+    url = "https://github.com/{{ .repo }}/archive/HEAD.tar.gz"
+    exact = true
+    stripComponents = 1
+    refreshPeriod = "168h"
+{{ end }}
+{{- if eq (includeTemplate "linux-binaries" .) "true" }}
+{{-   range .packages.tools }}
+{{-     with get . "github" }}
+{{-       $type := get . "type" | default "archive-file" }}
+{{-       if eq $type "archive" }}
+[{{ .dest | quote }}]
+    type = "archive"
+    exact = true
+{{-       else }}
+[{{ printf ".local/bin/%s" (get . "bin" | default (base (get . "path"))) | quote }}]
+    type = {{ $type | quote }}
+    executable = true
+{{-         with get . "path" }}
+    path = {{ . | quote }}
+{{-         end }}
+{{-         with get . "decompress" }}
+    decompress = {{ . | quote }}
+{{-         end }}
+{{-       end }}
+    url = {{ gitHubLatestReleaseAssetURL .repo .asset | quote }}
+{{-       with get . "strip" }}
+    stripComponents = {{ . }}
+{{-       end }}
+    refreshPeriod = "168h"
+{{     end }}
+{{-   end }}
+{{- end }}

@@ -1,5 +1,0 @@
-#!/bin/env zsh
-
-# TODO: this is exported after zsh-histdb is loaded...
-# ...so this doesn't do anything
-export HISTDB_TABULATE_CMD=(sed -e $'s/\x1f/\t/g')

@@ -1,0 +1,26 @@
+{{- /* Work machine: always in Coder, otherwise asked once and remembered. */ -}}
+{{- $work := false -}}
+{{- if or (env "CODER") (env "CODER_WORKSPACE_NAME") -}}
+{{-   $work = true -}}
+{{- else -}}
+{{-   $work = promptBoolOnce . "work" "Work machine" false -}}
+{{- end -}}
+# Remember where the repo lives (Coder clones it to ~/.config/coderv2/dotfiles).
+sourceDir = {{ .chezmoi.workingTree | quote }}
+
+[data]
+    work = {{ $work }}
+
+[edit]
+    command = "nvim"
+
+[merge]
+    command = "nvim"
+    args = ["-d", "{{ "{{ .Destination }}" }}", "{{ "{{ .Source }}" }}", "{{ "{{ .Target }}" }}"]
+
+[diff]
+    pager = "delta"
+
+# Cache GitHub release lookups (60 unauthenticated API requests/hour).
+[gitHub]
+    refreshPeriod = "24h"

@@ -1,6 +1,5 @@
 #!/bin/env zsh
 
-export ZSH_AUTOSUGGEST_USE_ASYNC=true
 export ZSH_AUTOSUGGEST_HISTORY_IGNORE="git commit *"
 export ZSH_AUTOSUGGEST_COMPLETION_IGNORE="git commit *"
 ZSH_AUTOSUGGEST_STRATEGY=(histdb history completion)
