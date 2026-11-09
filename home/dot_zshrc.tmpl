@@ -1,7 +1,8 @@
 #!/bin/env zsh
 
 typeset -U path
-path=(~/.local/bin $path)
+# Full path so Coder's Claude Code module finds it and doesn't append its own.
+path=({{ .chezmoi.homeDir }}/.local/bin $path)
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
