@@ -5,6 +5,7 @@
 .ssh/config
 .config/zsh/aliases/fixaudio
 .config/zsh/aliases/quit
+.config/rex
 {{ end }}
 
 # Compiled zsh caches that plugins (powerlevel10k) rewrite at runtime.

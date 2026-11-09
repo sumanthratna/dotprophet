@@ -1,0 +1,1 @@
+-- Rex config. Migrated from Ghostty: its config sets no keybinds or other options.
