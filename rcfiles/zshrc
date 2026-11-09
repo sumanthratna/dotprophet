@@ -1,48 +1,6 @@
 #!/bin/env zsh
 
-# Ensure ~/.local/bin is in PATH before Zellij auto-attach, so resurrected
-# commands (e.g. claude --resume) are found when Zellij inherits this PATH.
 export PATH="$HOME/.local/bin:$PATH"
-
-# Auto-attach to Zellij in Ghostty (not in SSH, not nested)
-if [[ -z "$ZELLIJ" && -z "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; then
-  session_file="/tmp/zellij-next-session"
-  if [[ -f "$session_file" ]]; then
-    session=$(<"$session_file")
-    rm -f "$session_file"
-    exec zellij attach --create "$session"
-  else
-    sessions=$(zellij list-sessions -s 2>/dev/null)
-    if [[ -z "$sessions" ]]; then
-      exec zellij attach --create default
-    fi
-    # --print-query: line 1 is the typed query, line 2 (if any) the selection.
-    # Exit 0 = selection made, 1 = no match (create session named by the query),
-    # 130 = esc/ctrl-c (keep old fallback to "default").
-    # ⌦ (fn+⌫ on a laptop) deletes the highlighted session; without --force
-    # only EXITED sessions are removed, live ones are silently left alone.
-    result=$(echo "$sessions" | fzf --prompt="Zellij session: " --print-query --cycle \
-      --header="enter: attach · type new name: create · ⌦: delete" \
-      --bind='del:execute-silent(zellij delete-session {})+reload(zellij list-sessions -s 2>/dev/null)')
-    case $? in
-      0) session=${result##*$'\n'} ;;   # last line: the selection
-      1) session=${result%%$'\n'*} ;;   # first line: the query — new session name
-      *) session= ;;
-    esac
-    exec zellij attach --create "${session:-default}"
-  fi
-fi
-
-# Ghostty shell integration for shells not directly spawned by Ghostty.
-# https://github.com/ghostty-org/ghostty/blob/bfe633a9487892ff3d27ed727db540267f22ef90/src/shell-integration/zsh/ghostty-integration#L20-L36
-# The block above exec's into Zellij in the outermost zsh before Ghostty's
-# auto-injection can run, so every interactive shell we ever see is a
-# Zellij child and has to source the integration explicitly. Without this,
-# the `ssh` wrapper that forwards COLORTERM/TERM_PROGRAM and uploads
-# xterm-ghostty terminfo to remote hosts is never installed.
-if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
-  source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
-fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -78,7 +36,7 @@ fpath+=~/.zfunc
 zsh-defer -c 'autoload -Uz compinit && compinit'
 source <(fzf --zsh)
 
-# Rebind fzf-git.sh from Ctrl-G to Alt-G (Ctrl-G is Zellij's locked-mode toggle)
+# Rebind fzf-git.sh from Ctrl-G to Alt-G
 for m in emacs vicmd viins; do
   bindkey -M $m -r '^[g' 2>/dev/null  # unbind get-line so ^[g works as prefix
   for o in files branches tags remotes hashes stashes lreflogs each_ref worktrees; do
@@ -91,9 +49,9 @@ for m in emacs vicmd viins; do
   bindkey -M $m '^[g?' 'fzf-git-?list_bindings-widget' 2>/dev/null
 done
 
-# Option+Arrow word movement (Ghostty remaps to Ctrl+Arrow CSI to bypass Zellij)
+# Ctrl+Arrow word movement
 bindkey '\e[1;5D' backward-word
 bindkey '\e[1;5C' forward-word
 
-# Cmd+Backspace deletes to start of line (Ghostty sends ^U, whose zsh default is kill-whole-line)
+# ^U deletes to start of line (zsh default is kill-whole-line)
 bindkey '^U' backward-kill-line

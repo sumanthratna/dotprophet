@@ -1,3 +1,0 @@
-# Zellij
-
-Manage Zellij sessions

@@ -71,19 +71,8 @@ nvim --headless "+Lazy! sync" +qa
 
 ln -s ~/dotprophet/ssh_config ~/.ssh/config
 
-mkdir -p ~/.config/ghostty
-ln -s ~/dotprophet/rcfiles/ghostty/config ~/.config/ghostty/config
-ln -s ~/dotprophet/rcfiles/ghostty/zellij-keybinds ~/.config/ghostty/zellij-keybinds
-
-ln -s ~/dotprophet/rcfiles/zellij ~/.config/zellij
-
 curl -fsSL https://claude.ai/install.sh | bash
-mkdir -p ~/.claude/hooks
 ln -s ~/dotprophet/rcfiles/claude/settings.json ~/.claude/settings.json
-ln -s ~/dotprophet/rcfiles/claude/hooks/notify-focus.sh ~/.claude/hooks/notify-focus.sh
-
-# Register Raycast extensions (npm run dev only needs to register, Ctrl+C immediately)
-pushd ~/dotprophet/raycast/extensions/zellij && npm install && npm run dev; popd
 
 defaults write com.apple.finder AppleShowAllFiles YES
 ```

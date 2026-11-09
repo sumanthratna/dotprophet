@@ -8,13 +8,13 @@
   },
   "model": "opus",
   "hooks": {
-    "Notification": [
+    "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/notify-focus.sh",
-            "async": true
+            "command": "/bin/sh -c 'rex __internal session-start --agent claude 2>/dev/null || true'",
+            "timeout": 5
           }
         ]
       }
