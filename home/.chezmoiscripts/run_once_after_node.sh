@@ -5,3 +5,4 @@ export NVM_DIR="$HOME/.nvm"
 . "$NVM_DIR/nvm.sh"
 nvm install 22
 nvm alias default 22
+corepack enable pnpm
