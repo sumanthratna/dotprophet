@@ -38,3 +38,21 @@
 {{     end }}
 {{-   end }}
 {{- end }}
+
+# Catppuccin Frappe themes (bat ships its own; nvim's is a lazy.nvim plugin).
+[".config/eza/theme.yml"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/catppuccin/eza/main/themes/frappe/catppuccin-frappe-mauve.yml"
+    refreshPeriod = "168h"
+[".config/lazygit/config.yml"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/catppuccin/lazygit/main/themes-mergable/frappe/mauve.yml"
+    refreshPeriod = "168h"
+{{- if eq .chezmoi.os "darwin" }}
+# Rex has no setting for this in init.lua: import it once with the
+# "Import Theme File" command.
+[".config/rex/themes/catppuccin-frappe.conf"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/catppuccin/ghostty/main/themes/catppuccin-frappe.conf"
+    refreshPeriod = "168h"
+{{- end }}
