@@ -1,2 +1,4 @@
 # Replaced by chezmoi-managed plugins in ~/.local/share/zsh/plugins.
 .zgen
+# Replaced by Atuin.
+.local/share/zsh/plugins/zsh-histdb

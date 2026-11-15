@@ -4,6 +4,20 @@ typeset -U path
 # Full path so Coder's Claude Code module finds it and doesn't append its own.
 path=({{ .chezmoi.homeDir }}/.local/bin $path)
 
+# Atuin output capture: re-exec this shell inside atuin's PTY proxy before
+# anything else loads (atuin init would do it only at the end, after the whole
+# zshrc has already run once). A no-op inside the proxy and for `zsh -c`.
+if (( $+commands[atuin] )); then
+  # A proxy that starts with no daemon running never captures, so start the
+  # daemon first. Only in a new terminal's outer shell, which is about to exec.
+  if [[ -t 0 && -t 1 && -z ${ATUIN_PTY_PROXY_ACTIVE-} && -z ${ZSH_EXECUTION_STRING-} ]]; then
+    # `daemon status` exits 0 either way, so check what it prints.
+    [[ $(atuin daemon status 2>/dev/null) == 'Daemon running'* ]] || atuin daemon restart &>/dev/null
+  fi
+  [[ ~/.cache/atuin-pty-proxy.zsh -nt $commands[atuin] ]] || atuin pty-proxy init zsh >~/.cache/atuin-pty-proxy.zsh 2>/dev/null
+  source ~/.cache/atuin-pty-proxy.zsh
+fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -41,6 +55,14 @@ zsh-defer -c 'autoload -Uz compinit && compinit && source $NVM_DIR/bash_completi
 if (( $+commands[fzf] )); then
   [[ ~/.cache/fzf.zsh -nt $commands[fzf] ]] || fzf --zsh >~/.cache/fzf.zsh 2>/dev/null
   source ~/.cache/fzf.zsh
+fi
+# Atuin after fzf so its Ctrl-R wins; it also registers itself as the first
+# zsh-autosuggestions strategy. Its output depends on the config too, so it's
+# regenerated when either the atuin binary or config.toml changes.
+if (( $+commands[atuin] )); then
+  [[ ~/.cache/atuin.zsh -nt $commands[atuin] && ~/.cache/atuin.zsh -nt ~/.atuin/config.toml ]] ||
+    atuin init zsh >~/.cache/atuin.zsh 2>/dev/null
+  source ~/.cache/atuin.zsh
 fi
 
 # Rebind fzf-git.sh from Ctrl-G to Alt-G

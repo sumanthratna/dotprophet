@@ -1,0 +1,19 @@
+# Unset keys use Atuin's defaults: https://docs.atuin.sh/latest/configuration/config/
+
+# Kept from the config Atuin generates on first run.
+enter_accept = true
+
+[theme]
+name = "catppuccin-frappe-mauve"
+
+# Command output capture, so Atuin AI can read it (it asks before each read):
+# https://docs.atuin.sh/latest/ai/command-output/
+[daemon]
+enabled = true
+autostart = true
+
+[pty_proxy]
+enabled = true
+
+[output]
+enabled = true

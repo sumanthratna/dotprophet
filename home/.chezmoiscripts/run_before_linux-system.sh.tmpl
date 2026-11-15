@@ -5,7 +5,6 @@
 set -euo pipefail
 missing=()
 command -v zsh >/dev/null || missing+=(zsh)
-command -v sqlite3 >/dev/null || missing+=(sqlite3)  # zsh-histdb
 command -v cc >/dev/null || missing+=(gcc)  # nvim-treesitter builds parsers
 perl -MFile::Find -e1 2>/dev/null || missing+=(perl)  # cloc
 if (( ${#missing[@]} )); then

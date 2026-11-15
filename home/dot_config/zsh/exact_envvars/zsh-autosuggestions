@@ -2,20 +2,5 @@
 
 export ZSH_AUTOSUGGEST_HISTORY_IGNORE="git commit *"
 export ZSH_AUTOSUGGEST_COMPLETION_IGNORE="git commit *"
-ZSH_AUTOSUGGEST_STRATEGY=(histdb history completion)
-
-_zsh_autosuggest_strategy_histdb() {
-	typeset -g suggestion
-	suggestion=$(_histdb_query "
-			SELECT commands.argv
-			FROM history
-				LEFT JOIN commands ON history.command_id = commands.rowid
-				LEFT JOIN places ON history.place_id = places.rowid
-			WHERE
-				commands.argv LIKE '$(sql_escape $1)%' AND
-				places.dir = '$(sql_escape $PWD)'
-			GROUP BY commands.argv
-			ORDER BY COUNT(*) DESC, history.start_time DESC
-			LIMIT 1
-	")
-}
+# atuin's strategy is defined by `atuin init zsh` in .zshrc.
+ZSH_AUTOSUGGEST_STRATEGY=(atuin history completion)
