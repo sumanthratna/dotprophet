@@ -1,6 +1,5 @@
 #!/bin/env zsh
 
-typeset -U path
 # Full path so Coder's Claude Code module finds it and doesn't append its own.
 path=({{ .chezmoi.homeDir }}/.local/bin $path)
 
@@ -29,6 +28,10 @@ setopt CORRECT
 setopt CORRECT_ALL
 setopt INTERACTIVE_COMMENTS
 
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="git commit *"
+ZSH_AUTOSUGGEST_COMPLETION_IGNORE="git commit *"
+# Atuin (below) adds its own strategy to the front.
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 {{- range .zshPlugins }}
 source ~/.local/share/zsh/plugins/{{ .name }}/{{ .file }}
 {{- end }}
@@ -38,16 +41,23 @@ fpath=(
 {{- end }}
   $fpath
 )
-export CLICOLOR=1
+# Comments in yellow rather than unhighlighted.
+ZSH_HIGHLIGHT_STYLES[comment]='fg=yellow'
 for f in ~/.config/zsh/prompt/*(N.); do source $f; done
-# nvm and the default Node load eagerly: a process started before deferred
-# loading runs (Claude Code and its hooks) would otherwise inherit a PATH with
-# no node. --no-use skips nvm's slow default lookup; prepend its bin dir directly.
-export NVM_DIR=~/.nvm
+# For the `nvm` command only: .zshenv already put the default Node on PATH.
 source $NVM_DIR/nvm.sh --no-use
-path=($NVM_DIR/versions/node/v$(<$NVM_DIR/alias/default)*/bin(Nn[-1]) $path)
-zsh-defer -c 'for f in ~/.config/zsh/envvars/*(N.); do source $f; done'
-zsh-defer -c 'for f in ~/.config/zsh/aliases/*(N.); do source $f; done'
+# Move that Node back to the front: in login shells macOS's path_helper
+# (/etc/zprofile) runs after .zshenv and puts the system directories first.
+path=(${(M)path:#$NVM_DIR/*} $path)
+
+# One function per file, loaded on first call.
+fpath=(~/.config/zsh/functions $fpath)
+autoload -Uz ~/.config/zsh/functions/*(N.:t)
+alias .f='cd {{ .chezmoi.workingTree | quote }}'
+{{- if eq .chezmoi.os "darwin" }}
+alias fixaudio='sudo launchctl stop com.apple.audio.coreaudiod && sudo launchctl start com.apple.audio.coreaudiod'
+{{- end }}
+alias show='eza -alh --git'
 
 fpath+=~/.zfunc
 zsh-defer -c 'autoload -Uz compinit && compinit && source $NVM_DIR/bash_completion'

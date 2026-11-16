@@ -1,6 +1,0 @@
-#!/bin/env zsh
-
-export ZSH_AUTOSUGGEST_HISTORY_IGNORE="git commit *"
-export ZSH_AUTOSUGGEST_COMPLETION_IGNORE="git commit *"
-# atuin's strategy is defined by `atuin init zsh` in .zshrc.
-ZSH_AUTOSUGGEST_STRATEGY=(atuin history completion)

@@ -1,26 +1,26 @@
 # @sumanthratna's dotfiles
 
-## Useful [Aliases](./home/dot_config/zsh/exact_aliases)
+## Useful Functions and Aliases
 
-### [`quit`](./home/dot_config/zsh/exact_aliases/quit)
+### [`quit`](./home/dot_config/zsh/exact_functions/quit)
 
 - quits the current terminal app in macOS
 - usage: `quit`
 
-### [`rmr`](./home/dot_config/zsh/exact_aliases/rmr)
+### [`rmr`](./home/dot_config/zsh/exact_functions/rmr)
 
 - recursively removes a file
 - usage: `rmr .DS_Store`
 - adapted from <https://stackoverflow.com/a/45647470/7127932>
 
-### [`email`](./home/dot_config/zsh/exact_aliases/email)
+### [`email`](./home/dot_config/zsh/exact_functions/email)
 
 - returns a list of emails given a social media handle
 - useful for when you know someone's GitHub username and need to contact them via email
 - usage: `email github AutinMitra`
 - I wrote this one myself
 
-### [`show`](./home/dot_config/zsh/exact_aliases/show)
+### [`show`](./home/dot_zshrc.tmpl)
 
 - lists all the files in a pretty way, using [`eza`](https://github.com/eza-community/eza)
 - usage: `show` or `show dir/` or `show file`

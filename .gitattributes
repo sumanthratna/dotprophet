@@ -1,8 +1,5 @@
-aliases/* linguist-language=Shell
-envvars/* linguist-language=Shell
+home/dot_config/zsh/exact_functions/* linguist-language=Shell
 prompt/* linguist-language=Shell
-aliases.sh linguist-language=Shell
-envvars.sh linguist-language=Shell
 prompt.sh linguist-language=Shell
 
 flutter_settings linguist-language=JSON

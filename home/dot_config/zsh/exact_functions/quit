@@ -1,0 +1,9 @@
+local bundle="${__CFBundleIdentifier:-}"
+# Rex's shells are started by its background server, not the app, so they
+# don't inherit the app's bundle ID.
+[[ -z $bundle && $TERM_PROGRAM == rex ]] && bundle=com.superlogical.rex
+if [[ -z $bundle ]]; then
+  echo "Could not detect terminal app" >&2
+  return 1
+fi
+osascript -e "do shell script \"osascript -e 'tell app id \\\"$bundle\\\" to quit' &>/dev/null &\""
