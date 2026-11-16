@@ -41,6 +41,10 @@ VI_MODE_SET_CURSOR=true
 source ~/.local/share/zsh/plugins/vi-mode/vi-mode.plugin.zsh
 KEYTIMEOUT=1
 
+# Frappe colors for zsh-syntax-highlighting, which must see them when it loads
+# (the last plugin below). The theme also turns on the `cursor` highlighter,
+# which paints the character under the cursor.
+source ~/.local/share/zsh/catppuccin-frappe-syntax-highlighting.zsh
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="git commit *"
 ZSH_AUTOSUGGEST_COMPLETION_IGNORE="git commit *"
 # Atuin (below) adds its own strategy to the front.
@@ -54,8 +58,6 @@ fpath=(
 {{- end }}
   $fpath
 )
-# Comments in yellow rather than unhighlighted.
-ZSH_HIGHLIGHT_STYLES[comment]='fg=yellow'
 for f in ~/.config/zsh/prompt/*(N.); do source $f; done
 # For the `nvm` command only: .zshenv already put the default Node on PATH.
 source $NVM_DIR/nvm.sh --no-use
