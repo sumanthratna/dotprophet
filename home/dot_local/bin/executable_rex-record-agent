@@ -1,0 +1,35 @@
+#!/bin/sh
+# Agent SessionStart/SessionEnd hook: remember which agent session runs in which
+# Rex pane, so the pane can offer to resume it after a Rex server restart (which
+# keeps panes and their IDs but ends their programs without telling them).
+# Usage: rex-record-agent claude|codex [end]
+# SessionStart records; SessionEnd forgets that session. The hook's JSON arrives
+# on stdin. Never fails: a hook error would disturb the agent.
+agent=$1
+mode=${2:-start}
+command -v jq >/dev/null 2>&1 || exit 0
+dir=${XDG_STATE_HOME:-$HOME/.local/state}/rex-agents
+tab=$(printf '\t')
+IFS=$tab read -r id reason <<EOF
+$(jq -r 'select(.session_id) | [.session_id, .reason // "other"] | @tsv' 2>/dev/null)
+EOF
+[ -n "$id" ] || exit 0
+
+if [ "$mode" = end ]; then
+  # Keep the record when the terminal went away (a Rex server stop hangs up
+  # every pane): both agents report that as "other". Any other reason is the
+  # user ending the session.
+  [ "$reason" = other ] && exit 0
+  # Found by session ID rather than by pane.
+  grep -lxF "$agent$tab$id" "$dir"/* 2>/dev/null | xargs rm -f
+  exit 0
+fi
+
+[ -n "$REX_BLOCK" ] || exit 0
+
+mkdir -p "$dir" || exit 0
+# Records for panes that no longer exist are never read again.
+find "$dir" -type f -mtime +30 -delete 2>/dev/null
+file=$dir/$(printf %s "$REX_BLOCK" | tr -c 'A-Za-z0-9._-' _)
+printf '%s\t%s\n' "$agent" "$id" >"$file.tmp" && mv "$file.tmp" "$file" || rm -f "$file.tmp"
+exit 0

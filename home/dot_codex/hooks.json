@@ -1,0 +1,31 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh -c 'rex __internal session-start --agent codex 2>/dev/null || true'",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "rex-record-agent codex",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rex-record-agent codex end",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

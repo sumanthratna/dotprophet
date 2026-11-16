@@ -106,6 +106,9 @@ _cache_gen ~/.cache/fzf.zsh fzf --zsh && source ~/.cache/fzf.zsh
 [[ ~/.cache/atuin.zsh -nt ~/.atuin/config.toml ]] || rm -f ~/.cache/atuin.zsh
 _cache_gen ~/.cache/atuin.zsh atuin init zsh && source ~/.cache/atuin.zsh
 unfunction _cache_gen
+# Resume the agent that ran in this Rex pane before a server restart. After the
+# vi-mode plugin and before the first prompt, so not deferred.
+source ~/.config/zsh/rex-resume.zsh
 
 # ^U deletes to start of line, as in Neovim. zsh's vi-kill-line stops where
 # insert mode was entered.
