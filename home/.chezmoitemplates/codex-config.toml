@@ -1,0 +1,24 @@
+# Codex settings kept in the dotfiles. rex-record-agent and the rest of the repo
+# assume them. Everything else in ~/.codex/config.toml (trusted projects, hook
+# trust hashes, plugin and skill state) is machine-specific, so it stays out of
+# the repo: home/dot_codex/modify_private_config.toml.tmpl keeps those tables as they are.
+model = "gpt-6-astra"
+model_reasoning_effort = "low"
+personality = "pragmatic"
+plan_mode_reasoning_effort = "low"
+service_tier = "default"
+
+[features]
+# Skip Codex's shared background server: its hooks and agent commands run in the
+# server's environment, which keeps the REX_BLOCK of whichever pane started it.
+# `codex agents` and --remote need the server.
+daemon_auto_start = false
+
+[mcp_servers.next-devtools]
+command = "pnpx"
+args = ["next-devtools-mcp@latest"]
+
+[tui]
+status_line = ["model-with-reasoning", "context-remaining", "current-dir", "project-root", "git-branch", "five-hour-limit", "weekly-limit", "context-window-size", "used-tokens", "total-input-tokens", "total-output-tokens", "session-id"]
+# Set by Codex once its screen-reader check has run.
+screen_reader_detection_done = true

@@ -1,0 +1,16 @@
+#!/bin/sh
+# Merges the tracked Codex settings with the machine-specific tables Codex keeps
+# in this file. chezmoi passes the current file on stdin and writes what we print.
+cat <<'SETTINGS'
+{{ includeTemplate "codex-config.toml" . }}
+SETTINGS
+# Keep the tables Codex writes, dropping only what the fragment above replaces:
+# top-level keys, [features], [mcp_servers.*] and [tui].
+awk '
+  /^\[/ {
+    h = $0; gsub(/^\[+|\]+.*$/, "", h)
+    keep = h !~ /^(features|mcp_servers\..*|tui)$/
+    if (keep) print ""
+  }
+  keep { print }
+' | cat -s
