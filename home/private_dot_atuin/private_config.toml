@@ -3,6 +3,10 @@
 # Kept from the config Atuin generates on first run.
 enter_accept = true
 
+# Open the search UI in the shell's current keymap (emacs, vim insert or vim
+# normal) instead of always in emacs.
+keymap_mode = "auto"
+
 [theme]
 name = "catppuccin-frappe-mauve"
 

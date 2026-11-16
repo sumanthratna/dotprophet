@@ -3,6 +3,10 @@
 # Full path so Coder's Claude Code module finds it and doesn't append its own.
 path=({{ .chezmoi.homeDir }}/.local/bin $path)
 
+# Insert-mode cursor (steady bar) right away: the vi-mode plugin below only sets
+# it at the first prompt, so the terminal's default block shows until then.
+[[ -t 1 ]] && printf '\e[6 q'
+
 # Atuin output capture: re-exec this shell inside atuin's PTY proxy before
 # anything else loads (atuin init would do it only at the end, after the whole
 # zshrc has already run once). A no-op inside the proxy and for `zsh -c`.
@@ -27,6 +31,15 @@ fi
 setopt CORRECT
 setopt CORRECT_ALL
 setopt INTERACTIVE_COMMENTS
+
+# Vim keys at the prompt. Oh My Zsh's vi-mode plugin (downloaded on its own, no
+# Oh My Zsh needed) runs `bindkey -v`, sets the cursor shape per mode and binds
+# `vv` to edit the line in $EDITOR. Source it before other plugins and later
+# bindkeys so they land in the vi keymaps. KEYTIMEOUT=1 makes Esc switch modes
+# after 10ms.
+VI_MODE_SET_CURSOR=true
+source ~/.local/share/zsh/plugins/vi-mode/vi-mode.plugin.zsh
+KEYTIMEOUT=1
 
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="git commit *"
 ZSH_AUTOSUGGEST_COMPLETION_IGNORE="git commit *"
@@ -75,22 +88,6 @@ if (( $+commands[atuin] )); then
   source ~/.cache/atuin.zsh
 fi
 
-# Rebind fzf-git.sh from Ctrl-G to Alt-G
-for m in emacs vicmd viins; do
-  bindkey -M $m -r '^[g' 2>/dev/null  # unbind get-line so ^[g works as prefix
-  for o in files branches tags remotes hashes stashes lreflogs each_ref worktrees; do
-    bindkey -M $m -r "^g^${o[1]}" 2>/dev/null
-    bindkey -M $m -r "^g${o[1]}" 2>/dev/null
-    eval "bindkey -M $m '^[g^${o[1]}' fzf-git-$o-widget 2>/dev/null"
-    eval "bindkey -M $m '^[g${o[1]}' fzf-git-$o-widget 2>/dev/null"
-  done
-  bindkey -M $m -r '^g?' 2>/dev/null
-  bindkey -M $m '^[g?' 'fzf-git-?list_bindings-widget' 2>/dev/null
-done
-
-# Ctrl+Arrow word movement
-bindkey '\e[1;5D' backward-word
-bindkey '\e[1;5C' forward-word
-
-# ^U deletes to start of line (zsh default is kill-whole-line)
+# ^U deletes to start of line, as in Neovim. zsh's vi-kill-line stops where
+# insert mode was entered.
 bindkey '^U' backward-kill-line

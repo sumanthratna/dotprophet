@@ -1,3 +1,8 @@
+# One file of Oh My Zsh, not the whole repo (the zshPlugins loop below fetches repos).
+[".local/share/zsh/plugins/vi-mode/vi-mode.plugin.zsh"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/vi-mode/vi-mode.plugin.zsh"
+    refreshPeriod = "168h"
 [".nvm"]
     type = "archive"
     url = "https://github.com/nvm-sh/nvm/archive/refs/tags/{{ (gitHubLatestRelease "nvm-sh/nvm").TagName }}.tar.gz"
