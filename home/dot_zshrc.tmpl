@@ -32,6 +32,12 @@ setopt CORRECT
 setopt CORRECT_ALL
 setopt INTERACTIVE_COMMENTS
 
+# Tell the terminal the current directory (OSC 7) on each cd. Rex otherwise
+# saves the directory of the pane's top process, which is Atuin's PTY proxy,
+# so restored panes would open where the shell started, not where it was.
+_osc7_cwd() { printf '\e]7;file://%s%s\e\\' $HOST ${PWD// /%20} }
+autoload -Uz add-zsh-hook && add-zsh-hook chpwd _osc7_cwd
+
 # Vim keys at the prompt. Oh My Zsh's vi-mode plugin (downloaded on its own, no
 # Oh My Zsh needed) runs `bindkey -v`, sets the cursor shape per mode and binds
 # `vv` to edit the line in $EDITOR. Source it before other plugins and later
