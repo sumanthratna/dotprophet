@@ -53,7 +53,7 @@ KEYTIMEOUT=1
 source ~/.local/share/zsh/catppuccin-frappe-syntax-highlighting.zsh
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="git commit *"
 ZSH_AUTOSUGGEST_COMPLETION_IGNORE="git commit *"
-# Atuin (below) adds its own strategy to the front.
+# Atuin and zsh-oracle (below) each add their own strategy to the front.
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 {{- range .zshPlugins }}
 source ~/.local/share/zsh/plugins/{{ .name }}/{{ .file }}
@@ -109,6 +109,9 @@ unfunction _cache_gen
 # Resume the agent that ran in this Rex pane before a server restart. After the
 # vi-mode plugin and before the first prompt, so not deferred.
 source ~/.config/zsh/rex-resume.zsh
+# zsh-oracle after Atuin so it goes ahead of Atuin as the first
+# zsh-autosuggestions strategy. Skipped where it is not checked out.
+[[ -r ~/quantum/zsh-oracle/zsh-oracle.plugin.zsh ]] && source ~/quantum/zsh-oracle/zsh-oracle.plugin.zsh
 
 # ^U deletes to start of line, as in Neovim. zsh's vi-kill-line stops where
 # insert mode was entered.
