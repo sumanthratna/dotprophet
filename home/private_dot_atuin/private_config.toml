@@ -21,3 +21,9 @@ enabled = true
 
 [output]
 enabled = true
+
+# Capture Claude Code and other agent sessions so `atuin resume` and
+# `atuin threads search` can find them. Secrets are masked; stays local while
+# sync is off: https://docs.atuin.sh/latest/ai/threads/
+[threads]
+capture = true
