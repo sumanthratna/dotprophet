@@ -9,18 +9,24 @@ command -v cc >/dev/null || missing+=(gcc)  # nvim-treesitter builds parsers
 perl -MFile::Find -e1 2>/dev/null || missing+=(perl)  # cloc
 if (( ${#missing[@]} )); then
   if sudo -n true 2>/dev/null; then
-    # Another apt (provisioning, unattended-upgrades) may hold the lock; wait.
+    # Another apt (provisioning, unattended-upgrades) may hold the lock.
+    # DPkg::Lock::Timeout covers dpkg's lock but not apt-get update's lock on
+    # /var/lib/apt/lists, so retry for about 10 minutes. On failure, warn and
+    # exit 0: a failing run_before_ script would abort the whole apply.
     apt=(sudo DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::Lock::Timeout=600)
-    { "${apt[@]}" update -qq && "${apt[@]}" install -y -qq "${missing[@]}" >/dev/null; } ||
-      { echo "error: apt install of ${missing[*]} failed" >&2; exit 1; }
+    for attempt in {1..60}; do
+      "${apt[@]}" update -qq && "${apt[@]}" install -y -qq "${missing[@]}" >/dev/null && break
+      if (( attempt == 60 )); then
+        echo "warning: apt install of ${missing[*]} failed; zsh/gcc/perl setup skipped" >&2
+        exit 0
+      fi
+      sleep 10
+    done
   else
     echo "warning: missing ${missing[*]} and no passwordless sudo" >&2
   fi
 fi
-if ! zsh=$(command -v zsh); then
-  [[ " ${missing[*]} " == *" zsh "* ]] && { echo "error: zsh still missing after install" >&2; exit 1; }
-  exit 0
-fi
+zsh=$(command -v zsh) || exit 0
 user=$(id -un)
 if [[ $(getent passwd "$user" | cut -d: -f7) != "$zsh" ]]; then
   sudo -n chsh -s "$zsh" "$user" 2>/dev/null || echo "warning: could not change login shell to zsh" >&2
