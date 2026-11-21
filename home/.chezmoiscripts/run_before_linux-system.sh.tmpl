@@ -1,7 +1,7 @@
 {{ if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
-# Runs on every apply: a Coder rebuild resets everything outside ~, including
-# apt packages and the login shell in /etc/passwd.
+# Runs on every apply, so machines whose root disk is reset (apt packages and
+# the login shell in /etc/passwd) get them back.
 set -euo pipefail
 missing=()
 command -v zsh >/dev/null || missing+=(zsh)
@@ -9,12 +9,18 @@ command -v cc >/dev/null || missing+=(gcc)  # nvim-treesitter builds parsers
 perl -MFile::Find -e1 2>/dev/null || missing+=(perl)  # cloc
 if (( ${#missing[@]} )); then
   if sudo -n true 2>/dev/null; then
-    sudo apt-get update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "${missing[@]}" >/dev/null
+    # Another apt (provisioning, unattended-upgrades) may hold the lock; wait.
+    apt=(sudo DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::Lock::Timeout=600)
+    { "${apt[@]}" update -qq && "${apt[@]}" install -y -qq "${missing[@]}" >/dev/null; } ||
+      { echo "error: apt install of ${missing[*]} failed" >&2; exit 1; }
   else
     echo "warning: missing ${missing[*]} and no passwordless sudo" >&2
   fi
 fi
-zsh=$(command -v zsh) || exit 0
+if ! zsh=$(command -v zsh); then
+  [[ " ${missing[*]} " == *" zsh "* ]] && { echo "error: zsh still missing after install" >&2; exit 1; }
+  exit 0
+fi
 user=$(id -un)
 if [[ $(getent passwd "$user" | cut -d: -f7) != "$zsh" ]]; then
   sudo -n chsh -s "$zsh" "$user" 2>/dev/null || echo "warning: could not change login shell to zsh" >&2
