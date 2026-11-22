@@ -14,6 +14,7 @@ export CLICOLOR=1
 
 export BAT_THEME="Catppuccin Frappe"
 export MANPAGER="sh -c 'col -bx | bat -plman'"
+export MANROFFOPT="-c"
 
 # Point eza and lazygit at the Catppuccin Frappe themes chezmoi downloads
 # (.chezmoiexternal.toml.tmpl); on macOS they'd otherwise look in ~/Library.
